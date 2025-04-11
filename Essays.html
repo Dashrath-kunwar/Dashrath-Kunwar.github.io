@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashrath Kunwar | Essays</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Oxygen+Mono&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background-color: #0a0a0a;
+      color: #33ff33;
+      font-family: 'Roboto', "Helvetica Rounded", "Arial Rounded MT Bold", 'Oxygen Mono', monospace;
+      line-height: 1.6;
+      image-rendering: pixelated;
+      padding: 0;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    
+    .noise {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('data:image/png;base64,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');
+      opacity: 0.03;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    header {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 4px solid #33ff33;
+      position: relative;
+      margin-bottom: 20px;
+    }
+    
+    .logo {
+      font-family: 'Press Start 2P', 'VT323', monospace;
+      font-size: 36px;
+      letter-spacing: 1px;
+      text-shadow: 4px 4px 0px #990099;
+      animation: blink 1.5s infinite;
+      font-weight: normal;
+      line-height: 1.3;
+    }
+    
+    nav {
+      background-color: #111;
+      padding: 10px 0;
+      margin-bottom: 30px;
+    }
+    
+    nav ul {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+    }
+    
+    nav ul li {
+      margin: 0 15px;
+    }
+    
+    nav ul li a {
+      color: #33ff33;
+      text-decoration: none;
+      font-family: 'Roboto', "Helvetica Rounded", "Arial Rounded MT Bold", 'VT323', monospace;
+      font-size: 24px;
+      text-transform: uppercase;
+      transition: all 0.3s;
+      padding: 5px;
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+    
+    nav ul li a:hover {
+      color: #ff33ff;
+      text-shadow: 2px 2px 0px #33ffff;
+    }
+    
+    .active {
+      border-bottom: 2px solid #33ff33;
+    }
+    
+    .essays-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    
+    .essay-card {
+      padding: 20px;
+      background-color: #111;
+      border: 4px solid #33ff33;
+      box-shadow: 8px 8px 0px #990099;
+      transition: all 0.3s;
+    }
+    
+    .essay-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 10px 10px 0px #990099;
+    }
+    
+    .essay-card h2 {
+      font-family: 'Press Start 2P', 'VT323', monospace;
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #ff33ff;
+      font-weight: normal;
+      line-height: 1.4;
+    }
+    
+    .essay-meta {
+      font-size: 14px;
+      margin-bottom: 15px;
+      color: #33ffff;
+    }
+    
+    .essay-excerpt {
+      margin-bottom: 20px;
+    }
+    
+    .categories {
+      margin-top: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .category-tag {
+      background-color: #222;
+      color: #33ffff;
+      padding: 3px 8px;
+      font-size: 14px;
+      border: 1px solid #33ffff;
+    }
+    
+    .essay-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+    }
+    
+    .read-more {
+      background-color: #33ff33;
+      color: #0a0a0a;
+      font-family: 'VT323', monospace;
+      padding: 5px 10px;
+      text-decoration: none;
+      text-transform: uppercase;
+      display: inline-block;
+      border: none;
+      transition: all 0.3s;
+    }
+    
+    .read-more:hover {
+      background-color: #ff33ff;
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 #33ffff;
+    }
+    
+    .social-share {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .social-icon {
+      color: #33ff33;
+      font-size: 18px;
+      transition: all 0.3s;
+    }
+    
+    .social-icon:hover {
+      color: #ff33ff;
+      transform: scale(1.2);
+    }
+    
+    .page-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .page-title {
+      font-family: 'Press Start 2P', 'VT323', monospace;
+      font-size: 28px;
+      color: #ff33ff;
+      display: inline-block;
+      padding: 0 20px 15px;
+      border-bottom: 4px double #33ff33;
+      margin-bottom: 20px;
+      font-weight: normal;
+      line-height: 1.4;
+    }
+    
+    .page-description {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      padding: 15px;
+      background-color: #111;
+      border: 2px solid #33ff33;
+    }
+    
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .filter-label {
+      color: #33ffff;
+      font-size: 16px;
+    }
+    
+    .filter-select {
+      background-color: #222;
+      color: #33ff33;
+      border: 1px solid #33ff33;
+      padding: 5px 10px;
+      font-family: 'Oxygen Mono', monospace;
+    }
+    
+    .search-box {
+      display: flex;
+      gap: 5px;
+    }
+    
+    .search-input {
+      background-color: #222;
+      color: #33ff33;
+      border: 1px solid #33ff33;
+      padding: 5px 10px;
+      font-family: 'Oxygen Mono', monospace;
+      width: 200px;
+    }
+    
+    .search-button {
+      background-color: #33ff33;
+      color: #0a0a0a;
+      border: none;
+      padding: 5px 10px;
+      font-family: 'VT323', monospace;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .search-button:hover {
+      background-color: #ff33ff;
+    }
+    
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 40px;
+      gap: 10px;
+    }
+    
+    .page-number {
+      background-color: #111;
+      color: #33ff33;
+      border: 2px solid #33ff33;
+      padding: 5px 12px;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    
+    .page-number:hover, .page-number.active {
+      background-color: #33ff33;
+      color: #0a0a0a;
+    }
+    
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 40px;
+      font-family: 'VT323', monospace;
+      font-size: 16px;
+      border-top: 4px solid #33ff33;
+    }
+    
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav ul {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      nav ul li {
+        margin: 5px 0;
+      }
+      
+      .logo {
+        font-size: 36px;
+      }
+      
+      .filter-bar {
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  
+  <header>
+    <div class="container">
+      <h1 class="logo">DASHRATH KUNWAR</h1>
+      <p>Flowers of the same class</p>
+    </div>
+  </header>
+  
+  <nav>
+    <div class="container">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="essays.html" class="active">Essays</a></li>
+        <li><a href="book-reviews.html">Book Reviews</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+  <div class="container">
+    <div class="page-header">
+      <h1 class="page-title">ESSAYS</h1>
+      <p class="page-description">Analytical explorations of literary trends, movements, and phenomena across both classical and contemporary works.</p>
+    </div>
+    
+    <div class="filter-bar">
+      <div class="filter-group">
+        <span class="filter-label">Sort by:</span>
+        <select class="filter-select">
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="popular">Most Popular</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <span class="filter-label">Category:</span>
+        <select class="filter-select">
+          <option value="all">All Categories</option>
+          <option value="literary-theory">Literary Theory</option>
+          <option value="digital-humanities">Digital Humanities</option>
+          <option value="comparative">Comparative Literature</option>
+          <option value="modernism">Modernism</option>
+          <option value="postmodernism">Postmodernism</option>
+        </select>
+      </div>
+      
+      <div class="search-box">
+        <input type="text" placeholder="Search essays..." class="search-input">
+        <button class="search-button">SEARCH</button>
+      </div>
+    </div>
+    
+    <div class="essays-grid">
+      <div class="essay-card">
+        <h2>The Digital Divide in Contemporary Literature</h2>
+        <div class="essay-meta">Posted on April 6, 2025 | 12 min read</div>
+        <div class="essay-excerpt">
+          <p>As we progress further into the digital age, literature finds itself at a crossroads. Traditional print media continues to hold cultural significance while digital formats reshape how we consume and interpret text. This dichotomy presents both challenges and opportunities for writers and readers alike.</p>
+          <p>The shift from physical to digital text changes not just the medium but the message itself. Hypertext navigation, embedded multimedia, and interactive elements create new possibilities for narrative structure that weren't possible in traditional formats...</p>
+        </div>
+        <div class="categories">
+          <span class="category-tag">Digital Humanities</span>
+          <span class="category-tag">Media Studies</span>
+          <span class="category-tag">Contemporary</span>
+        </div>
+        <div class="essay-actions">
+          <a href="#" class="read-more">READ FULL ESSAY</a>
+          <div class="social-share">
+            <a href="#" class="social-icon">↗</a>
+            <a href="#" class="social-icon">⎋</a>
+            <a href="#" class="social-icon">⤑</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="essay-card">
+        <h2>The Resurrection of Epistolary Storytelling in a Digital Era</h2>
+        <div class="essay-meta">Posted on March 25, 2025 | 9 min read</div>
+        <div class="essay-excerpt">
+          <p>Epistolary novels—stories told through collections of letters—were once a dominant literary form. From Samuel Richardson's "Pamela" to Bram Stoker's "Dracula," the format allowed for intimate first-person accounts from multiple perspectives. This form gradually fell from prominence as literary tastes evolved.</p>
+          <p>Today, we're witnessing a surprising revival of epistolary storytelling adapted for the digital age. Email exchanges, text messages, social media posts, and other digital communications have become the modern equivalent of letter collections...</p>
+        </div>
+        <div class="categories">
+          <span class="category-tag">Narrative Form</span>
+          <span class="category-tag">Digital Humanities</span>
+          <span class="category-tag">Historical</span>
+        </div>
+        <div class="essay-actions">
+          <a href="#" class="read-more">READ FULL ESSAY</a>
+          <div class="social-share">
+            <a href="#" class="social-icon">↗</a>
+            <a href="#" class="social-icon">⎋</a>
+            <a href="#" class="social-icon">⤑</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="essay-card">
+        <h2>Metamodernism: The Literary Response to Post-Truth Culture</h2>
+        <div class="essay-meta">Posted on March 15, 2025 | 14 min read</div>
+        <div class="essay-excerpt">
+          <p>In the wake of postmodernism's deconstruction and skepticism, a new sensibility has emerged in literature that critics increasingly identify as metamodernism. This aesthetic response oscillates between modernism's sincerity and postmodernism's irony, creating a unique tension that reflects our contemporary moment.</p>
+          <p>Metamodern literature acknowledges the postmodern critique of grand narratives while simultaneously yearning for meaning and authenticity. This paradoxical position creates works that are both knowing and naive, cynical and hopeful...</p>
+        </div>
+        <div class="categories">
+          <span class="category-tag">Literary Theory</span>
+          <span class="category-tag">Contemporary</span>
+          <span class="category-tag">Cultural Studies</span>
+        </div>
+        <div class="essay-actions">
+          <a href="#" class="read-more">READ FULL ESSAY</a>
+          <div class="social-share">
+            <a href="#" class="social-icon">↗</a>
+            <a href="#" class="social-icon">⎋</a>
+            <a href="#" class="social-icon">⤑</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="essay-card">
+        <h2>The Evolution of the Unreliable Narrator in Fiction</h2>
+        <div class="essay-meta">Posted on March 3, 2025 | 11 min read</div>
+        <div class="essay-excerpt">
+          <p>Few literary devices challenge readers as effectively as the unreliable narrator. From its early incarnations in works like Poe's "The Tell-Tale Heart" to modern psychological thrillers, this narrative technique has evolved in fascinating ways that reflect changing cultural understandings of truth and subjectivity.</p>
+          <p>This essay traces the development of unreliable narration through key works in literary history, examining how authors have deployed increasingly sophisticated forms of narrative deception that blur the boundaries between fact and fiction within their fictional worlds...</p>
+        </div>
+        <div class="categories">
+          <span class="category-tag">Narrative Technique</span>
+          <span class="category-tag">Comparative</span>
+          <span class="category-tag">Literary Analysis</span>
+        </div>
+        <div class="essay-actions">
+          <a href="#" class="read-more">READ FULL ESSAY</a>
+          <div class="social-share">
+            <a href="#" class="social-icon">↗</a>
+            <a href="#" class="social-icon">⎋</a>
+            <a href="#" class="social-icon">⤑</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="essay-card">
+        <h2>The Literary Legacy of Climate Fiction: From Speculation to Documentary</h2>
+        <div class="essay-meta">Posted on February 22, 2025 | 16 min read</div>
+        <div class="essay-excerpt">
+          <p>Climate fiction, or "cli-fi," has emerged as one of the most significant literary developments of the 21st century. What began as a speculative subgenre has evolved into a mode of writing that increasingly blurs the line between scientific projection and literary imagination.</p>
+          <p>This essay examines how climate fiction has transformed from primarily dystopian speculation to works that function almost as documentary literature of our present moment. As climate change accelerates, writers find themselves in the unusual position of struggling to keep pace with reality...</p>
+        </div>
+        <div class="categories">
+          <span class="category-tag">Environmental Literature</span>
+          <span class="category-tag">Science Fiction</span>
+          <span class="category-tag">Contemporary</span>
+        </div>
+        <div class="essay-actions">
+          <a href="#" class="read-more">READ FULL ESSAY</a>
+          <div class="social-share">
+            <a href="#" class="social-icon">↗</a>
+            <a href="#" class="social-icon">⎋</a>
+            <a href="#" class="social-icon">⤑</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="pagination">
+      <a href="#" class="page-number active">1</a>
+      <a href="#" class="page-number">2</a>
+      <a href="#" class="page-number">3</a>
+      <a href="#" class="page-number">→</a>
+    </div>
+  </div>
+  
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Dashrath Kunwar | All rights reserved</p>
+      <p>Crafted with pixels and prose</p>
+    </div>
+  </footer>
+</body>
+</html>
