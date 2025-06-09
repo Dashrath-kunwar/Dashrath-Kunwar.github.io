@@ -9,16 +9,14 @@ This site is:
 
 ## 🛠️ Built With
 
-- HTML + CSS (no frameworks, just vibes)
+- HTML + CSS (no frameworks)
 - Hosted on [GitHub Pages](https://pages.github.com/)
 - Domain from [Hostinger](https://www.hostinger.in/)
 
 ## 🗂️ Structure
 
-- `/index.html` – Homepage
-- `/essays/` – Longform writing
-- `/pdfs/` – Archived works and references
-- `/css/` – Stylesheets
+- Homepage
+  - Writings
 
 ## 💡 Philosophy
 
