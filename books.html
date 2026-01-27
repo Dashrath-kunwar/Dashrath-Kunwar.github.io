@@ -79,16 +79,49 @@
     <p>A running log of books I've read.</p>
   </div>
 
+  <div id="month-index" style="text-align:center; margin-bottom:2rem;">
+    <a href="#" data-month="January 2026">January 2026</a>
+  </div>
+
+  <h2 class="month-header" data-month="January 2026">January 2026</h2>
+  <div class="month-group">
+
   <div class="book">
-    <span class="book-title">Reversing the Gaze: Amar Singh's diary</span> - The original sensitive young man. The chapter on the Boxer Rebellion and days in the Imperial service corp are my favourite. Good primary source for military enthusiasts. 
+    <span class="book-title">Reversing the Gaze: Amar Singh's diary</span> - The original sensitive young man. The chapter on the Boxer Rebellion and days in the Imperial service corp are my favourite. Good primary source for military history enthusiasts. 
   </div>
   
   <div class="book">
     <span class="book-title">The complete works of Swami Vivekananda(9 volumes)</span> - Do not expect a rigourous and complete explanation for Vedanta. At best an initiation. A very good initiation.
   </div>
 
+  </div>
+
+<script>
+  // Collapse / expand month groups
+  document.querySelectorAll('.month-header').forEach(header => {
+    header.style.cursor = 'pointer';
+    header.addEventListener('click', () => {
+      const group = header.nextElementSibling;
+      group.style.display = group.style.display === 'none' ? 'block' : 'none';
+    });
+  });
+
+  // Month index jump + auto-expand
+  document.querySelectorAll('#month-index a').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const month = link.getAttribute('data-month');
+      const header = document.querySelector(`.month-header[data-month="${month}"]`);
+      const group = header.nextElementSibling;
+      group.style.display = 'block';
+      header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+
 </body>
 </html>
+
 
 
 
