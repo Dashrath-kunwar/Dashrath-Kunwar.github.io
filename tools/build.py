@@ -22,12 +22,10 @@ import argparse
 import datetime as dt
 import hashlib
 import html
-import io
 import os
 import re
 import sys
 import urllib.parse
-import zipfile
 
 try:
     import markdown
@@ -251,42 +249,6 @@ def write_binary(path, data, changed, check):
     return True
 
 
-def build_zip(entries):
-    """Deterministic zip bytes.
-
-    Every entry gets a fixed timestamp. Using real mtimes would change the
-    archive on every build even when nothing else did, and the Action would
-    push an empty commit each time.
-    """
-    buffer = io.BytesIO()
-    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
-        for name in sorted(entries):
-            info = zipfile.ZipInfo(name, date_time=(2026, 1, 1, 0, 0, 0))
-            info.compress_type = zipfile.ZIP_DEFLATED
-            info.external_attr = 0o644 << 16
-            z.writestr(info, entries[name])
-    return buffer.getvalue()
-
-
-# Directories that exist for building the site, not for serving it.
-ZIP_SKIP_DIRS = {"tools", "posts", ".github", "downloads", "__pycache__"}
-ZIP_SKIP_FILES = {".nojekyll", "CNAME"}
-
-
-def collect_site_files():
-    """Everything a visitor could fetch, for the offline archive."""
-    entries = {}
-    for root, dirs, files in os.walk(ROOT):
-        dirs[:] = [d for d in dirs if d not in ZIP_SKIP_DIRS and not d.startswith(".")]
-        for f in files:
-            if f in ZIP_SKIP_FILES or f.startswith("."):
-                continue
-            full = os.path.join(root, f)
-            rel = os.path.relpath(full, ROOT).replace(os.sep, "/")
-            entries[rel] = open(full, "rb").read()
-    return entries
-
-
 def precached_paths(sw_text):
     """The asset list the service worker holds cache-first.
 
@@ -401,38 +363,16 @@ def main():
                 if not args.check:
                     os.remove(os.path.join(OUT, name))
 
-    # ---- Archive of the essays. Built last so it captures everything above.
-    # HTML only: the per-essay PDFs stay on the site as individual downloads,
-    # but bundling them here would roughly quadruple the file for no gain.
+    # ---- No zip archives. Removed deliberately: the only download offered
+    # anywhere on the site is the per-essay PDF above. Don't reinstate them
+    # without asking. Clear out anything an older build left behind.
     if not args.check:
-        site_files = collect_site_files()
-
-        essays = {
-            name: data
-            for name, data in site_files.items()
-            if name.startswith("writings/")
-            and name.endswith(".html")
-            and not os.path.basename(name).startswith("_")
-        }
-        if essays:
-            # The stylesheet rides along so the pages aren't raw text; the
-            # webfonts don't, since the CSS falls back to Georgia cleanly.
-            if "style.css" in site_files:
-                essays["style.css"] = site_files["style.css"]
-            essays["README.txt"] = (
-                "The essays from dashrathkunwar.in.\r\n\r\n"
-                "Open any file in the writings folder with a web browser.\r\n"
-                "They read fine with no internet connection.\r\n"
-            ).encode("utf-8")
-            write_binary(os.path.join(ROOT, "downloads", "writings.zip"),
-                         build_zip(essays), changed, args.check)
-
-        # The whole-site archive was removed deliberately — don't reinstate it
-        # without asking. Clean up the file if an older build left one behind.
-        stale_zip = os.path.join(ROOT, "downloads", "dashrathkunwar-site.zip")
-        if os.path.exists(stale_zip):
-            changed.append("removed downloads/dashrathkunwar-site.zip")
-            os.remove(stale_zip)
+        downloads = os.path.join(ROOT, "downloads")
+        if os.path.isdir(downloads):
+            for name in sorted(os.listdir(downloads)):
+                changed.append(f"removed downloads/{name}")
+                os.remove(os.path.join(downloads, name))
+            os.rmdir(downloads)
 
     print(f"{len(posts)} post(s) published" + (f", {len(skipped)} draft(s) skipped" if skipped else ""))
     for p in posts:

@@ -245,7 +245,6 @@ A robot on GitHub notices the new file and automatically:
 - adds it to the **Writings** list, newest first
 - adds it to the **RSS feed** so subscribers get it
 - adds it to the **sitemap** so Google finds it
-- rebuilds the **zip** of all essays
 - updates the offline cache so returning readers see the new version
 
 You do none of that by hand. Never edit `writings.html`, `feed.xml` or
