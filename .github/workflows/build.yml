@@ -1,0 +1,54 @@
+name: Build essays
+
+# Only fires on hand-edited source. The build WRITES writings/, writings.html,
+# feed.xml, sitemap.xml, sw.js and downloads/ — none of which may appear below,
+# or the commit it pushes would retrigger this workflow forever.
+# Note sw.js and writings.html are deliberately absent for exactly that reason.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'posts/**'
+      - 'tools/**'
+      - 'style.css'
+      - 'index.html'
+      - 'books.html'
+      - '404.html'
+      - 'install.html'
+      - 'theme.js'
+      - 'share.js'
+      - 'books-search.js'
+      - 'sw-register.js'
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install markdown fpdf2
+
+      - name: Build
+        run: python tools/build.py
+
+      - name: Commit the generated pages
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "Nothing changed."
+          else
+            git commit -m "Build essays"
+            git push
+          fi

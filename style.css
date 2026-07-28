@@ -1,0 +1,704 @@
+/* dashrathkunwar.in — shared styles for every page.
+   Self-hosted fonts, no third parties, no build step. */
+
+/* ---------- Fonts ----------
+   Served from /fonts so no visitor data goes to Google. The unicode-range
+   splits mean latin-ext is only fetched if a page actually needs those glyphs. */
+
+@font-face {
+  font-family: 'Crimson Pro';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/crimson-pro-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Crimson Pro';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/crimson-pro-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Unbounded';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('fonts/unbounded-600-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Unbounded';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('fonts/unbounded-600-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  --bg: #000;
+  --fg: #fff;
+  --accent: #f00;
+  --link: #0af;
+  --panel: #111;
+  --muted: #a8a8a8;
+  --rule: #2a2a2a;
+  --shadow: rgba(0, 0, 0, 0.6);
+  --hover: #c00000;
+  --measure: 760px;
+
+  /* Fluid type. Each step has a hard floor and ceiling, so the size scales with
+     the viewport but never collapses on a phone or balloons on a monitor.
+     Floors are the mobile sizes: 18px body, 34px h1. */
+  --text: clamp(1.125rem, 1.06rem + 0.32vw, 1.3125rem);   /* 18 -> 21px */
+  --text-sm: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);      /*  16 -> 18px */
+  --text-h1: clamp(2.125rem, 1.6rem + 2.6vw, 3.25rem);    /*  34 -> 52px */
+  --text-h2: clamp(1.375rem, 1.24rem + 0.66vw, 1.75rem);  /*  22 -> 28px */
+  --text-h3: clamp(1.1875rem, 1.12rem + 0.35vw, 1.375rem);/*  19 -> 22px */
+
+  color-scheme: dark;
+}
+
+/* Light theme. Dark is the default; this applies only when the reader asks for
+   it, and the choice is remembered in localStorage.
+   Red and blue are darkened here — #f00 and #0af are legible on black but fall
+   below usable contrast on white. */
+:root[data-theme='light'] {
+  --bg: #fbfaf8;
+  --fg: #14110f;
+  --accent: #c00000;
+  --link: #0057b8;
+  --panel: #f0eeea;
+  --muted: #5a5551;
+  --rule: #dcd8d2;
+  --shadow: rgba(20, 17, 15, 0.18);
+  --hover: #c00000;
+
+  color-scheme: light;
+}
+
+html {
+  /* Stops iOS Safari inflating text on rotation and Chrome's mobile font
+     boosting from rewriting sizes per-device. This is what keeps the
+     rendered size consistent everywhere. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: 'Crimson Pro', Georgia, 'Times New Roman', serif;
+  font-size: var(--text);
+  line-height: 1.65;
+  padding: 40px 20px;
+  max-width: var(--measure);
+  margin: auto;
+  /* Catalogue entries and essay links include long unbroken strings
+     (filename-style titles, bare URLs). Without this they punch out of the
+     column and give narrow screens a horizontal scrollbar. */
+  overflow-wrap: break-word;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ---------- Typography ---------- */
+
+h1 {
+  font-family: 'Unbounded', Impact, 'Arial Black', sans-serif;
+  font-size: var(--text-h1);
+  line-height: 1.15;
+  margin: 0 0 0.5rem;
+  color: var(--accent);
+  overflow-wrap: break-word;
+}
+
+h2 {
+  font-family: 'Unbounded', Impact, 'Arial Black', sans-serif;
+  font-size: var(--text-h2);
+  line-height: 1.25;
+  margin: 2.5rem 0 1rem;
+  overflow-wrap: break-word;
+}
+
+p {
+  margin: 0 0 1.5rem;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 2.5rem 0;
+}
+
+/* ---------- Links ---------- */
+
+a {
+  color: var(--link);
+  text-decoration: underline;
+}
+
+/* Red highlight rather than a white block. #c00000 rather than pure red so
+   white text on it clears 5.8:1 — #f00 would only manage 4.0:1. */
+a:hover {
+  background: var(--hover);
+  color: #fff;
+}
+
+/* Keyboard users get a visible indicator the hover swap alone doesn't provide. */
+a:focus-visible,
+:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+}
+
+.skip-link:focus {
+  position: static;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+/* Touch targets. A bare inline link is only as tall as its text — around 17px
+   here — which is an awkward tap on a phone. WCAG 2.2 (SC 2.5.8) asks for at
+   least 24x24 CSS px, so standalone links get real vertical padding. Links
+   inside running prose are left alone; they're exempt and padding them would
+   disturb the line rhythm. */
+nav a,
+.subscribe a,
+.entries a,
+.collections a {
+  display: inline-block;
+  padding: 0.3em 0;
+}
+
+/* ---------- Theme toggle ---------- */
+
+.topbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+  min-height: 2rem;
+}
+
+.theme-toggle,
+.share-btn {
+  display: inline-block;
+  background: none;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  padding: 0.35em 0.8em;
+  font: inherit;
+  font-size: var(--text-sm);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.theme-toggle:hover,
+.share-btn:hover {
+  background: var(--hover);
+  color: #fff;
+  border-color: var(--hover);
+}
+
+.theme-toggle:focus-visible,
+.share-btn:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+/* ---------- Structure ---------- */
+
+nav ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin: 0 0 2rem;
+  padding: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Banners keep their proportions and sit centred with room to breathe.
+   width/height must both be auto here: the intrinsic width/height attributes
+   on the tag count as a specified width, which switches off the browser's
+   ratio-preserving path and lets max-width and max-height clamp independently
+   — that is what squashed the square artwork into a letterbox. */
+.banner {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: min(58vh, 420px);
+  /* Left-aligned with the text column, not centred. */
+  margin: 0 0 2.5rem;
+}
+
+.callout {
+  background-color: var(--panel);
+  border-left: 4px solid var(--link);
+  padding: 20px;
+  margin-bottom: 2rem;
+}
+
+.callout > :last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- Writings index ---------- */
+
+.entries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.entries li {
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.entries li:last-child {
+  border-bottom: 0;
+}
+
+.entries time {
+  display: block;
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+.empty {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.subscribe {
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+.install-note {
+  margin: 0.6rem 0 0;
+}
+
+footer {
+  margin-top: 40px;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+  text-align: center;
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+/* ---------- Essays ---------- */
+
+.post-header {
+  margin-bottom: 2.5rem;
+}
+
+/* Title and date, nothing else. */
+.post-header time {
+  display: block;
+  color: var(--muted);
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.post h2 {
+  color: var(--accent);
+  margin: 2.5rem 0 0.75rem;
+}
+
+.post h3 {
+  font-family: 'Unbounded', Impact, 'Arial Black', sans-serif;
+  font-size: var(--text-h3);
+  line-height: 1.3;
+  margin: 2rem 0 0.6rem;
+}
+
+.post blockquote {
+  margin: 2rem 0;
+  padding: 0.25rem 0 0.25rem 1.5rem;
+  border-left: 4px solid var(--accent);
+  color: var(--muted);
+  font-style: italic;
+}
+
+.post blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.post blockquote cite {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: var(--text-sm);
+  font-style: normal;
+}
+
+.post blockquote cite::before {
+  content: '— ';
+}
+
+.post ul,
+.post ol {
+  margin: 0 0 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.post li {
+  margin-bottom: 0.5rem;
+}
+
+.post code {
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  padding: 0.1em 0.35em;
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  font-size: 0.9em;
+}
+
+.post pre {
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--link);
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 0 0 1.5rem;
+}
+
+.post pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+.post figure {
+  margin: 2rem 0;
+}
+
+.post figcaption {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+/* ---------- Sharing ---------- */
+
+.share {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+
+.share-label {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  margin-right: 0.2rem;
+}
+
+.share-note {
+  width: 100%;
+  margin: 0.2rem 0 0;
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+/* Floating toolbar for a selected passage. Positioned in page coordinates so
+   it travels with the text instead of needing repositioning on every scroll. */
+.selection-share {
+  position: absolute;
+  z-index: 50;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  box-shadow: 0 4px 16px var(--shadow);
+}
+
+.selection-share button {
+  background: none;
+  border: 0;
+  color: var(--fg);
+  font: inherit;
+  font-size: var(--text-sm);
+  padding: 0.3em 0.7em;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.selection-share button:hover {
+  background: var(--hover);
+  color: #fff;
+}
+
+.selection-share button:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: -2px;
+}
+
+/* Screen-reader-only announcements ("Copied"). */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* When someone arrives via a shared passage link, browsers highlight the
+   target text with ::target-text. Make it match the site. */
+::target-text {
+  background: var(--link);
+  color: var(--bg);
+}
+
+/* ---------- Books: search ---------- */
+
+.search {
+  margin: 0 0 2rem;
+}
+
+.search label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.search input {
+  width: 100%;
+  padding: 0.7em 0.8em;
+  background: var(--panel);
+  color: var(--fg);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--link);
+  /* Inherits the fluid body size — never below 16px, so iOS won't zoom the
+     viewport when the field takes focus. */
+  font: inherit;
+}
+
+.search input::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+
+.search input:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+.count {
+  margin: 0.6rem 0 0;
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+/* ---------- Books: collection index ---------- */
+
+.collections ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  columns: 2;
+  column-gap: 2rem;
+}
+
+.collections li {
+  break-inside: avoid;
+  margin-bottom: 0.4rem;
+}
+
+.collections li span {
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+@media (max-width: 34rem) {
+  .collections ul {
+    columns: 1;
+  }
+}
+
+/* ---------- Books: the catalogue ---------- */
+
+/* Collections are <details>: closed by default, click the heading to open. */
+.collection {
+  border-bottom: 1px solid var(--rule);
+}
+
+.collection > summary {
+  list-style: none;          /* hide the default disclosure triangle */
+  cursor: pointer;
+  padding: 0.9rem 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.collection > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Our own marker, so it can be styled and rotated. */
+.collection > summary::before {
+  content: '▸';
+  color: var(--accent);
+  flex: none;
+  transition: transform 0.15s ease;
+}
+
+.collection[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.collection > summary:hover {
+  color: var(--hover);
+}
+
+.collection > summary:focus-visible {
+  outline: 2px solid var(--link);
+  outline-offset: 2px;
+}
+
+.collection > summary h2 {
+  color: var(--accent);
+  margin: 0;
+  flex: 1;
+}
+
+.collection > summary:hover h2 {
+  color: var(--hover);
+}
+
+.collection h2 .n {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  font-family: 'Crimson Pro', Georgia, serif;
+}
+
+.collection .books {
+  padding-bottom: 1.5rem;
+}
+
+/* ---------- Downloads ---------- */
+
+.downloads {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 2rem 0;
+}
+
+.downloads .note {
+  width: 100%;
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+/* ---------- Thumos link ---------- */
+
+.thumos {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.thumos img {
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+  border-radius: 2px;
+}
+
+.books {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.books li {
+  margin-bottom: 0.9rem;
+  padding-left: 1rem;
+  border-left: 1px solid var(--rule);
+}
+
+/* Author */
+.books b {
+  font-weight: 400;
+  color: var(--muted);
+  display: block;
+}
+
+/* Title */
+.books cite {
+  font-style: normal;
+  color: var(--fg);
+}
+
+/* Year */
+.books span {
+  color: var(--muted);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.books span::before {
+  content: ' · ';
+}
+
+/* ---------- Motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -3,73 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="The personal website of Dashrath Kunwar — featuring writings, notes, and more.">
-  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro&family=Unbounded:wght@600&display=swap" rel="stylesheet">
   <title>Dashrath Kunwar</title>
+  <meta name="description" content="The personal website of Dashrath Kunwar — essays, flânerie, and a 2000s-style hacker den.">
+  <meta name="author" content="Dashrath Kunwar">
+  <meta name="theme-color" content="#000000">
+  <link rel="canonical" href="https://dashrathkunwar.in/">
 
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="/web-app-manifest-192x192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="/web-app-manifest-512x512.png">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="manifest" href="/site.webmanifest">
-  
-  <style>
-    body {
-      background-color: #000;
-      color: #fff;
-      font-family: 'Crimson Pro', sans-serif;
-      font-size: 15px;
-      line-height: 1.6;
-      padding: 40px;
-      max-width: 720px;
-      margin: auto;
-    }
-    h1 {
-      font-family: 'Unbounded', sans-serif;
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      color: red;
-    }
+  <!-- Applies the saved theme before first paint, so light-mode readers never
+       see a flash of black. Must stay inline and blocking. -->
+  <script>try{if(localStorage.getItem('theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}</script>
 
-    img {
-  max-width: 100%;
-  height: auto;
-  max-height: 400px;
-}
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Dashrath Kunwar">
+  <meta property="og:title" content="Dashrath Kunwar">
+  <meta property="og:description" content="Essays, flânerie, and a 2000s-style hacker den.">
+  <meta property="og:url" content="https://dashrathkunwar.in/">
+  <meta property="og:image" content="https://dashrathkunwar.in/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Pixel-art preacher shouting before a burning city.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dashrath Kunwar">
+  <meta name="twitter:description" content="Essays, flânerie, and a 2000s-style hacker den.">
+  <meta name="twitter:image" content="https://dashrathkunwar.in/og-image.jpg">
 
-    p {
-      margin-bottom: 1.5rem;
-    }
-    a {
-      color: #0af;
-      text-decoration: underline;
-    }
-    a:hover {
-      background: #fff;
-      color: #000;
-    }
-    footer {
-      margin-top: 40px;
-      text-align: center;
-    }
-  </style>
+  <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="alternate" type="application/rss+xml" title="Dashrath Kunwar — Writings" href="feed.xml">
+
+  <link rel="preload" href="fonts/crimson-pro-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/unbounded-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Dashrath Kunwar</h1>
-  <img src="Preacher in Pixelated Inferno.png" alt="Dashrath Kunwar banner image" title="Dashrath Kunwar - Personal Website">
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <p>Amateur - HTML fundamentalist - Aspiring flaneurer - Dead languages and dead people - 
-    Primary accounts enjoyer - Conscious Artix sufferer - Midnight Qabristan stroller 
-  </p>
+  <div class="topbar">
+    <button type="button" class="theme-toggle" id="theme-toggle" hidden>☀ Light</button>
+  </div>
 
-  <p>
-    <a href="writings.html">Writings</a><br>
-    <a href="books.html">Books</a><br>
-  </p>
+  <header>
+    <h1>Dashrath Kunwar</h1>
+  </header>
+
+  <main id="main">
+    <img
+      class="banner"
+      src="img/preacher-in-pixelated-inferno.webp"
+      width="1024"
+      height="1024"
+      alt="Pixel-art illustration of a preacher in black robes and a cross necklace, one finger raised mid-sermon, shouting before a city consumed by orange flames."
+      fetchpriority="high">
+
+    <p>Amateur - HTML fundamentalist - Aspiring flaneurer - Dead languages and dead people -
+      Primary accounts enjoyer - Conscious Artix sufferer - Midnight Qabristan stroller
+    </p>
+
+    <nav aria-label="Sections">
+      <ul>
+        <li><a href="writings.html">Writings</a></li>
+        <li><a href="books.html">Books</a></li>
+        <li>
+          <a class="thumos" href="https://thumospress.com" target="_blank" rel="noopener noreferrer">
+            <img src="img/thumos.png" alt="" width="64" height="64">THUMOS</a>
+        </li>
+      </ul>
+    </nav>
+
+    <p class="subscribe">
+      Subscribe by <a href="feed.xml">RSS</a> — no email, no account, no algorithm.
+    </p>
+
+  </main>
 
   <footer>
+    <p>Hand-written HTML. No frameworks, no trackers, no third parties.</p>
+    <p class="install-note">
+      Prefer it as an app? You can <a href="install.html">add this site to your home screen</a>
+      on Android or iPhone — it opens full screen and works offline.
+    </p>
   </footer>
+
+  <script src="theme.js" defer></script>
+  <script src="sw-register.js" defer></script>
 </body>
 </html>
