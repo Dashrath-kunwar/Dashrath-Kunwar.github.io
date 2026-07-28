@@ -42,7 +42,27 @@ no copying files around later.
 Obsidian is now editing the site's posts directly. Everything you write here is
 one click away from being published.
 
-### 1.4 Turn off one Obsidian default
+### 1.4 Set up the template, so you never type the header block again
+
+The `title:` / `date:` block at the top of every post is called a **property
+block**. Obsidian won't add it to new notes on its own, but it will insert it
+for you from a template. The template already exists at
+`_templates/New essay.md`.
+
+1. **Settings** (gear, bottom-left) → **Core plugins**.
+2. Find **Templates** in the list and switch it **on**.
+3. Still in Settings, click **Templates** in the left sidebar (it appears under
+   *Core plugins* once enabled).
+4. Set **Template folder location** to `_templates`.
+5. Check **Date format** reads `YYYY-MM-DD`. If not, type exactly that.
+6. Go to **Settings** → **Hotkeys**, type `template` in the search box, find
+   **Templates: Insert template**, click the **+** and press **Ctrl+T**.
+
+From now on: new note (**Ctrl+N**) → **Ctrl+T** → choose **New essay**. The
+header block appears with today's date already filled in. You type the title
+and start writing.
+
+### 1.5 Turn off one Obsidian default
 
 Obsidian likes to put attachments in odd places. Fix that now:
 
@@ -59,20 +79,27 @@ Setup is done. You never repeat any of Part 1.
 
 ### 2.1 Make the file
 
-In Obsidian press **Ctrl+N** for a new note. Name it like this:
+In Obsidian press **Ctrl+N** for a new note, then **Ctrl+T** and pick
+**New essay** to drop in the header block.
+
+Name the note like this:
 
 ```
-2026-08-14-the-weight-of-a-small-room
+the-weight-of-a-small-room
 ```
 
 **The name matters.** The rules:
 
-- Start with the date, `YYYY-MM-DD`, then a hyphen.
-- Then the words of the title, lowercase, hyphens instead of spaces.
+- Lowercase words, hyphens instead of spaces.
 - No spaces. No capitals. No apostrophes, commas, colons or question marks.
 
 That name becomes the web address:
 `dashrathkunwar.in/writings/the-weight-of-a-small-room.html`
+
+You don't need the date in the filename, because the template already put it
+in the header block. (Putting it in the filename as
+`2026-08-14-the-weight-of-a-small-room` also works — the date is simply
+stripped off before the address is made. Either way is fine.)
 
 ### 2.2 The header block
 
