@@ -17,13 +17,4 @@
   the page, so leave it here.
 -->
 
-## Elias Canetti, *Crowds and Power*
-> The moment of discharge, so desired and so happy, contains its own danger.
-> It is based upon an illusion; the people who suddenly feel equal have not
-> really become equal.
-
-Kept because it names the thing most crowd-writing avoids: that the
-equality is felt, not achieved, and the feeling is the point.
-
-## An example of a plainer entry
-> Sometimes there is nothing to add and the line stands on its own.
+- [**Library of Chadnet, Aesthetic physique guide.**](https://wiki.chadnet.org/aesthetic-physique-guide) A passage from this blog post I originally found on Chadnet I really admire. "Force the aesthetic issue — you should be wearing tight, revealing clothing as often as you can. You should sleep naked, you should be very sexual. Understand your body, what it is made for as a man, and be in consistent gaze, admiration, and instinct with it. Look in the mirror often, pose a bit at the gym, really begin to care about your aesthetics. Your instinctive opinions and reactions to such tell you something, and when you respond and correct course via diet, exercise, sleep — this agreement births the universally aesthetic physique."
