@@ -415,6 +415,56 @@ footer {
   font-size: var(--text-sm);
 }
 
+/* ---------- Highlights ---------- */
+
+/* A running document: each entry is an h2 source line, usually followed by a
+   blockquote and sometimes a note. Entries are separated by a rule rather
+   than boxed, so a long page still reads as one continuous list. */
+
+.highlights > h2 {
+  color: var(--accent);
+  font-size: var(--text-h3);
+  margin: 3rem 0 1rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--rule);
+}
+
+.highlights > h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.highlights blockquote {
+  margin: 0 0 1.25rem;
+  padding: 0.25rem 0 0.25rem 1.5rem;
+  border-left: 4px solid var(--link);
+  font-size: 1.0625em;
+}
+
+.highlights blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* The author's own note sits quieter than the quotation it follows. */
+.highlights blockquote + p {
+  color: var(--muted);
+}
+
+.highlights ul,
+.highlights ol {
+  margin: 0 0 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.highlights li {
+  margin-bottom: 0.5rem;
+}
+
+.highlights hr {
+  margin: 2rem 0;
+}
+
 /* ---------- Sharing ---------- */
 
 .share {

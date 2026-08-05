@@ -40,6 +40,12 @@ POSTS = os.path.join(ROOT, "posts")
 OUT = os.path.join(ROOT, "writings")
 TEMPLATE = os.path.join(HERE, "templates", "post.html")
 
+# The Obsidian vault is posts/. Everything directly inside it is an essay,
+# except this one file, which is the running Highlights document.
+HIGHLIGHTS_NAME = "highlights.md"
+HIGHLIGHTS_SRC = os.path.join(POSTS, HIGHLIGHTS_NAME)
+HIGHLIGHTS_PAGE = os.path.join(ROOT, "highlights.html")
+
 MD_EXTENSIONS = [
     "extra",       # tables, footnotes, definition lists, fenced code
     "smarty",      # curly quotes and proper em/en dashes
@@ -98,6 +104,8 @@ def load_posts(include_drafts):
             continue
         if name.startswith("."):
             continue
+        if name.lower() == HIGHLIGHTS_NAME:
+            continue          # the Highlights document, not an essay
 
         path = os.path.join(POSTS, name)
         raw = open(path, encoding="utf-8").read()
@@ -262,6 +270,31 @@ def precached_paths(sw_text):
     return [p for p in re.findall(r"'([^']+)'", block.group(1)) if not p.endswith("/")]
 
 
+def render_highlights():
+    """Turn posts/highlights.md into the body of the Highlights page.
+
+    Rendered as-is rather than parsed into records: it's a running document,
+    so whatever Markdown gets written is what appears. Ordering is the
+    author's — entries near the top of the file appear near the top of
+    the page.
+    """
+    if not os.path.exists(HIGHLIGHTS_SRC):
+        return None
+    raw = open(HIGHLIGHTS_SRC, encoding="utf-8").read()
+    _, body = parse_front_matter(raw)      # tolerate front matter, ignore it
+    if not body.strip():
+        return '\n      <p class="empty">Nothing here yet.</p>\n    '
+    out = markdown.markdown(body, extensions=MD_EXTENSIONS, output_format="html5")
+    # Markdown passes HTML comments straight through. The notes-to-self at the
+    # top of highlights.md are for the author, not for anyone reading the
+    # page source, so drop them here.
+    out = re.sub(r"<!--.*?-->", "", out, flags=re.DOTALL).strip()
+    if not out:
+        return '\n      <p class="empty">Nothing here yet.</p>\n    '
+    out = "\n".join(("      " + l) if l.strip() else l for l in out.split("\n"))
+    return "\n" + out + "\n    "
+
+
 def cache_token(pages, writes, sw_text):
     """Short content hash, so the service worker invalidates on real changes.
 
@@ -314,6 +347,12 @@ def main():
         feed = re.sub(r"<lastBuildDate>.*?</lastBuildDate>",
                       f"<lastBuildDate>{rfc822(posts[0]['date'])}</lastBuildDate>", feed)
     writes[feed_path] = feed
+
+    highlights = render_highlights()
+    if highlights is not None and os.path.exists(HIGHLIGHTS_PAGE):
+        writes[HIGHLIGHTS_PAGE] = replace_region(
+            open(HIGHLIGHTS_PAGE, encoding="utf-8").read(), "HIGHLIGHTS", highlights
+        )
 
     sitemap_path = os.path.join(ROOT, "sitemap.xml")
     writes[sitemap_path] = replace_region(

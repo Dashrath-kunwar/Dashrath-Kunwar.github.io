@@ -20,6 +20,7 @@ This site is:
 index.html          Homepage
 writings.html       Essays index
 writings/           Individual essays
+highlights.html     Running list of highlights, built from posts/highlights.md
 library.html        Library catalogue (2,191 books, searchable)
 library-search.js   Vanilla-JS filter for the catalogue
 books.html          Redirect stub for the old /books.html address
@@ -91,6 +92,24 @@ To add a book, add an `<li>` to the right `<section>`:
 Drop the `<b>` if there's no author and the `<span>` if there's no year, then
 bump the collection's count in the heading and in the collection index, and
 bump `CACHE` in `sw.js`.
+
+## ✨ Highlights
+
+A running document rather than a set of posts. `posts/highlights.md` is the
+whole source; the build renders it and drops the result between the
+`BEGIN/END HIGHLIGHTS` markers in `highlights.html`.
+
+It is rendered **as-is** — no records are parsed out of it, so any Markdown
+works and the order on the page is the order in the file. The convention is
+`##` for the source, `>` for the quotation, plain text for a note, newest at
+the top, but nothing enforces that.
+
+Two things worth knowing:
+
+- `posts/highlights.md` sits inside the Obsidian vault but is **not** an
+  essay. `build.py` skips that one filename when collecting posts.
+- HTML comments are stripped from the rendered output, so the format reminder
+  at the top of the file stays out of the published page source.
 
 ## 🌗 Themes
 

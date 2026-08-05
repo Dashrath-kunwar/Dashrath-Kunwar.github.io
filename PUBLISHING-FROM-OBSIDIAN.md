@@ -252,7 +252,32 @@ You do none of that by hand. Never edit `writings.html`, `feed.xml` or
 
 ---
 
-## Part 4 — When something goes wrong
+## Part 3b — Adding a Highlight
+
+Highlights work differently from essays. There is **one file**, and you add to
+it. No new note, no header block, no filename rules.
+
+1. In Obsidian, open **highlights** (it sits at the top of your vault).
+2. Scroll past the grey comment at the top.
+3. Add your entry **directly underneath it**, so the newest sits first:
+
+```markdown
+## Where it came from
+> The thing worth keeping.
+
+Your own note, if you have one.
+```
+
+4. **Ctrl+S**, then commit and push exactly as with an essay.
+
+All three parts are optional. A bare quote with no source and no note is a
+perfectly good entry. The `##` line can be anything — a book and author, a
+video title with a link, or just *A conversation, August*.
+
+Links work normally: `## [The video](https://youtube.com/watch?v=...)`.
+
+**Leave the comment at the top of the file alone.** It never appears on the
+website — it's a reminder of the format, visible only to you.
 
 **The post didn't appear after two minutes.**
 Go to your repository on github.com and click the **Actions** tab. A green tick
