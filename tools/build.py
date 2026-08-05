@@ -307,9 +307,12 @@ def main():
     feed_path = os.path.join(ROOT, "feed.xml")
     feed = open(feed_path, encoding="utf-8").read()
     feed = replace_region(feed, "ITEMS", build_feed_items(posts))
-    newest = posts[0]["date"] if posts else dt.date.today()
-    feed = re.sub(r"<lastBuildDate>.*?</lastBuildDate>",
-                  f"<lastBuildDate>{rfc822(newest)}</lastBuildDate>", feed)
+    # Stamp the newest post's date. With no posts, leave whatever is already
+    # there — using today's date would rewrite the feed on every new day and
+    # produce a commit that changes nothing anyone can see.
+    if posts:
+        feed = re.sub(r"<lastBuildDate>.*?</lastBuildDate>",
+                      f"<lastBuildDate>{rfc822(posts[0]['date'])}</lastBuildDate>", feed)
     writes[feed_path] = feed
 
     sitemap_path = os.path.join(ROOT, "sitemap.xml")

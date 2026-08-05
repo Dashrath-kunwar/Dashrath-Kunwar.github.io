@@ -20,8 +20,9 @@ This site is:
 index.html          Homepage
 writings.html       Essays index
 writings/           Individual essays
-books.html          Library catalogue (2,191 books, searchable)
-books-search.js     Vanilla-JS filter for the catalogue
+library.html        Library catalogue (2,191 books, searchable)
+library-search.js   Vanilla-JS filter for the catalogue
+books.html          Redirect stub for the old /books.html address
 404.html            Not-found page
 style.css           All styles, shared by every page
 theme.js            Light/dark toggle
@@ -66,7 +67,7 @@ kept out of the nav, the feed and the sitemap.
 
 ## 📚 The catalogue
 
-`books.html` is generated from `Library_Catalog.pdf` — 2,191 books across 34
+`library.html` is generated from `Library_Catalog.pdf` — 2,191 books across 34
 collections. It is a catalogue of what's on the shelves, not a reading log and
 not a list of recommendations.
 
@@ -76,7 +77,7 @@ itself. Searching opens the collections that matched and clearing the box
 collapses them again; jumping to `#some-collection` from the index expands it.
 
 The entries are plain HTML, so the page works with JavaScript disabled;
-`books-search.js` only filters what's already there. Search is case-insensitive
+`library-search.js` only filters what's already there. Search is case-insensitive
 and accent-insensitive (`levi` finds `Lévi`), matches on title, author and
 collection, and requires every word typed to appear somewhere in the entry.
 Searches are shareable via `?q=`.
