@@ -192,8 +192,7 @@ a:focus-visible,
    disturb the line rhythm. */
 nav a,
 .subscribe a,
-.entries a,
-.collections a {
+.entries a {
   display: inline-block;
   padding: 0.3em 0;
 }
@@ -583,32 +582,6 @@ footer {
   margin: 0.6rem 0 0;
   color: var(--muted);
   font-size: var(--text-sm);
-}
-
-/* ---------- Books: collection index ---------- */
-
-.collections ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  columns: 2;
-  column-gap: 2rem;
-}
-
-.collections li {
-  break-inside: avoid;
-  margin-bottom: 0.4rem;
-}
-
-.collections li span {
-  color: var(--muted);
-  font-size: var(--text-sm);
-}
-
-@media (max-width: 34rem) {
-  .collections ul {
-    columns: 1;
-  }
 }
 
 /* ---------- Books: the catalogue ---------- */

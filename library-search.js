@@ -8,7 +8,6 @@
   var input = document.getElementById('q');
   var countEl = document.getElementById('count');
   var noResults = document.getElementById('no-results');
-  var collectionIndex = document.getElementById('collection-index');
   var library = document.getElementById('library');
 
   if (!form || !input || !library) return;
@@ -101,7 +100,6 @@
 
     var searching = tokens.length > 0;
     noResults.hidden = visible !== 0;
-    if (collectionIndex) collectionIndex.hidden = searching;
 
     if (!searching) {
       countEl.textContent = plural(total) + ' in ' + sections.length + ' collections';
