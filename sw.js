@@ -1,7 +1,7 @@
 /* Minimal offline support so the installed PWA isn't a blank page without a
    network. Bump CACHE when assets change — old caches are dropped on activate. */
 
-const CACHE = 'dk-0fbf35bf';
+const CACHE = 'dk-e21c9a54';
 
 const PRECACHE = [
   './',

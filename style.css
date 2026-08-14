@@ -41,7 +41,8 @@
 :root {
   --bg: #0c0c0c;
   --fg: #a7d1ab;          /* sage: body text, borders, links */
-  --head: #ff4a3d;        /* headings only — everything else stays sage */
+  --head: #ff4a3d;        /* headings, and the weight of bold text */
+  --em: #5fd3c4;          /* teal: italics only, a second accent for emphasis */
   --dim: #9a9a9a;         /* dates, subtitle, footer */
   --rule: #a7d1ab;
   --panel: #101010;
@@ -59,6 +60,7 @@
   --bg: #eae7dd;
   --fg: #26402a;
   --head: #a3231a;        /* the dark-mode red is unreadable on paper */
+  --em: #0f6e63;          /* likewise, the dark-mode teal needs deepening on paper */
   --dim: #4a4a45;
   --rule: #26402a;
   --panel: #e2ded2;
@@ -259,6 +261,15 @@ a:hover {
   border-bottom-color: transparent;
 }
 
+/* Bold and italic carry their own accent colors (see strong/em below), which
+   would otherwise fight a:hover's inverted background — including matching
+   it exactly, in bold's case, and vanishing. Emphasis inside a link always
+   takes the link's inverted color instead, whatever that emphasis color is. */
+a:hover strong,
+a:hover em {
+  color: inherit;
+}
+
 a:focus-visible,
 :focus-visible {
   outline: 2px solid var(--fg);
@@ -315,8 +326,16 @@ hr {
   margin: 24px 0;
 }
 
+/* Bold and italic get their own accents instead of sitting in body-color
+   sage — a little flourish, and a second visual register beyond the
+   headings' red. Bold borrows that same red, since both carry the same
+   weight; italics get their own cooler teal. */
 strong {
-  color: var(--fg);
+  color: var(--head);
+}
+
+em {
+  color: var(--em);
 }
 
 /* ---------- Content ---------- */
