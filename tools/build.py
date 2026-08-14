@@ -227,13 +227,12 @@ def render_posts(posts, template):
     return pages
 
 
-def build_entries(posts, limit=None):
-    """The <li> rows for a post list. `limit` trims it down for the homepage."""
-    shown = posts[:limit] if limit else posts
-    if not shown:
+def build_entries(posts):
+    """The <li> rows for the writings archive list."""
+    if not posts:
         return '\n          <li class="empty">Nothing published yet.</li>\n        '
     rows = []
-    for p in shown:
+    for p in posts:
         iso = p["date"].isoformat()
         rows.append(
             f'\n          <li>\n'
@@ -241,8 +240,6 @@ def build_entries(posts, limit=None):
             f'            <time datetime="{iso}">{iso}</time>\n'
             f'          </li>'
         )
-    if limit and len(posts) > limit:
-        rows.append('\n          <li><a href="writings.html">all writings &rarr;</a></li>')
     return "".join(rows) + "\n        "
 
 
@@ -467,14 +464,7 @@ def main():
         open(index_path, encoding="utf-8").read(), "ENTRIES", build_entries(posts)
     )
 
-    # The homepage doubles as the blog front page: the most recent handful,
-    # then a link through to the full archive.
-    home_path = os.path.join(ROOT, "index.html")
-    writes[home_path] = replace_region(
-        open(home_path, encoding="utf-8").read(), "RECENT", build_entries(posts, limit=5)
-    )
-
-    # ---- Running documents: home, about, projects, bookmarks.
+    # ---- Running documents (currently just the homepage).
     for md_name, page_name, marker in DOCS.values():
         page = os.path.join(ROOT, page_name)
         rendered = render_doc(md_name)
@@ -525,41 +515,22 @@ def main():
     # ---- Obsidian attachments into the served tree.
     sync_uploads(changed, args.check)
 
-    # ---- A PDF per essay, written next to its page.
-    pdf_ok = True
-    try:
-        import pdfgen
-    except ImportError:
-        pdf_ok = False
-        print("note: fpdf2 not installed, skipping PDFs (pip install fpdf2)")
-
-    if pdf_ok:
-        for p in posts:
-            target = os.path.join(OUT, f"{p['slug']}.pdf")
-            data = pdfgen.render_bytes(p["title"], human_date(p["date"]), p["content"])
-            write_binary(target, data, changed, args.check)
-
-    # Remove pages whose source Markdown is gone.
+    # Remove pages whose source Markdown is gone, and any leftover .pdf from
+    # when essays offered a download — removed, a browser can print to PDF.
     if os.path.isdir(OUT):
         keep = {os.path.basename(p) for p in pages}
-        keep_pdf = {os.path.splitext(k)[0] + ".pdf" for k in keep}
         for name in sorted(os.listdir(OUT)):
             if name.startswith("_"):
                 continue          # files starting with _ are templates/mockups
-            if name.endswith(".html") and name not in keep:
-                stale = True
-            elif name.endswith(".pdf") and name not in keep_pdf:
-                stale = True
-            else:
-                stale = False
+            stale = (name.endswith(".html") and name not in keep) or name.endswith(".pdf")
             if stale:
                 changed.append(f"removed writings/{name}")
                 if not args.check:
                     os.remove(os.path.join(OUT, name))
 
-    # ---- No zip archives. Removed deliberately: the only download offered
-    # anywhere on the site is the per-essay PDF above. Don't reinstate them
-    # without asking. Clear out anything an older build left behind.
+    # ---- No zip archives, no per-essay downloads. Nothing on the site offers
+    # a file to save. Don't reinstate without asking. Clear out anything an
+    # older build left behind.
     if not args.check:
         downloads = os.path.join(ROOT, "downloads")
         if os.path.isdir(downloads):

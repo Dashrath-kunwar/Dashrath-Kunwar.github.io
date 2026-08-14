@@ -124,6 +124,10 @@ body {
   align-self: flex-start;
   position: sticky;
   top: 32px;
+  /* Chrome repaints a sticky element's border a frame late during scroll,
+     leaving a ghost line beside the real one. Promoting it to its own
+     compositing layer keeps the border pinned to the box every frame. */
+  will-change: transform;
 }
 
 .main {
@@ -448,6 +452,16 @@ strong {
 
 /* ---------- Essay ---------- */
 
+/* Essay headings read as centered display type, title down to the smallest
+   section head — unlike the left-aligned heads everywhere else on the site.
+   Scoped to .post, so it applies to every essay by default: the title and
+   every ##/### heading a post's Markdown produces, with no per-post work. */
+.post h1,
+.post h2,
+.post h3 {
+  text-align: center;
+}
+
 .post-header {
   padding-bottom: 14px;
   margin-bottom: 24px;
@@ -711,6 +725,14 @@ strong {
     border-right: 0;
     border-top: 1px solid var(--rule);
     padding: 20px 16px;
+    will-change: auto;    /* not sticky here, so no layer needed */
+  }
+
+  /* Name and menu are the home screen's business. Everywhere else on a
+     phone — the archive, an essay, install instructions — is just the
+     content: nothing else competing for the reader's attention. */
+  body:not(.page-home) .sidebar {
+    display: none;
   }
 
   .profile {
