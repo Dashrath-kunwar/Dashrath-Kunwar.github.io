@@ -46,9 +46,6 @@ TEMPLATE = os.path.join(HERE, "templates", "post.html")
 # change here rather than an edit to seven files that will drift apart.
 MENU = [
     ("home", "index.html", "home"),
-    ("about me", "about.html", "about"),
-    ("bookmarks", "bookmarks.html", "bookmarks"),
-    ("projects", "projects.html", "projects"),
     ("writing", "writings.html", "writing"),
     ("thumos", "https://thumospress.com", "thumos"),
     ("rss", "feed.xml", "rss"),
@@ -63,10 +60,7 @@ TAGLINE = (
 # Running document pages: one Markdown file rendered straight into one page.
 # Everything writable from Obsidian lives here — no HTML editing required.
 DOCS = {
-    "home":      ("home.md",      "index.html",     "HOME"),
-    "about":     ("about.md",     "about.html",     "ABOUT"),
-    "projects":  ("projects.md",  "projects.html",  "PROJECTS"),
-    "bookmarks": ("bookmarks.md", "bookmarks.html", "BOOKMARKS"),
+    "home": ("home.md", "index.html", "HOME"),
 }
 
 # Obsidian drops attachments in posts/images/. They get copied into the served
@@ -359,9 +353,6 @@ def build_sidebar(prefix, current):
 # Which section each root page belongs to, for the filled button.
 PAGE_SECTION = {
     "index.html": "home",
-    "about.html": "about",
-    "bookmarks.html": "bookmarks",
-    "projects.html": "projects",
     "writings.html": "writing",
     "install.html": None,
     "404.html": None,
@@ -383,10 +374,16 @@ def expand_obsidian(body):
 
 
 def fix_image_paths(html_text, prefix):
-    """Point attachment links at the copies in the served tree."""
+    """Point attachment links at the copies in the served tree.
+
+    Also mark every image lazy: essay and doc images are attachments dropped
+    in from Obsidian, never the above-the-fold banner or profile art (those
+    live in the hand-written template, not here), so deferring them is safe.
+    """
     html_text = re.sub(r'src="(?:\./)?images/', f'src="{prefix}{UPLOADS_REL}/', html_text)
     if prefix:
         html_text = re.sub(rf'src="{UPLOADS_REL}/', f'src="{prefix}{UPLOADS_REL}/', html_text)
+    html_text = re.sub(r'<img(?![^>]*\bloading=)', '<img loading="lazy" decoding="async"', html_text)
     return html_text
 
 

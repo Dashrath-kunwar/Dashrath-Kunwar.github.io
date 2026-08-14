@@ -1,14 +1,11 @@
 /* Minimal offline support so the installed PWA isn't a blank page without a
    network. Bump CACHE when assets change — old caches are dropped on activate. */
 
-const CACHE = 'dk-fc8d992d';
+const CACHE = 'dk-7c2b91d4';
 
 const PRECACHE = [
   './',
   'index.html',
-  'about.html',
-  'bookmarks.html',
-  'projects.html',
   'writings.html',
   'install.html',
   '404.html',
@@ -18,7 +15,6 @@ const PRECACHE = [
   'img/preacher-in-pixelated-inferno.webp',
   'img/come-for-the-essays.webp',
   'img/banner-aqueduct.png',
-  'img/about-placeholder.png',
   'img/thumos.png',
   'fonts/roboto-mono-latin.woff2',
   'fonts/unifraktur-latin.woff2',

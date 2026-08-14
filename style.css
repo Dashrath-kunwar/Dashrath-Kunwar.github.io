@@ -72,6 +72,9 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   background: var(--bg);
+  /* Links and buttons already invert instantly on press (see a:hover below).
+     The browser's own tap-highlight box would flash over that, so it's off. */
+  -webkit-tap-highlight-color: transparent;
 }
 
 *,
@@ -408,47 +411,6 @@ strong {
   margin: 0 0 18px;
 }
 
-/* ---------- Bookmarks ---------- */
-
-/* Each entry is an h2 source line, usually a quotation, sometimes a note.
-   Separated by a rule rather than boxed, so a long page reads as one list. */
-.highlights > h2 {
-  font-size: 21px;
-  margin: 24px 0 10px;
-  padding-top: 18px;
-  border-top: 1px solid var(--rule);
-}
-
-.highlights > h2:first-child {
-  margin-top: 0;
-  padding-top: 0;
-  border-top: 0;
-}
-
-.highlights blockquote {
-  margin: 0 0 12px;
-  padding-left: 16px;
-  border-left: 2px solid var(--rule);
-}
-
-.highlights blockquote p:last-child {
-  margin-bottom: 0;
-}
-
-.highlights blockquote + p {
-  color: var(--dim);
-}
-
-.highlights ul,
-.highlights ol {
-  margin: 0 0 16px;
-  padding-left: 22px;
-}
-
-.highlights li {
-  margin-bottom: 6px;
-}
-
 .box > :last-child {
   margin-bottom: 0;
 }
@@ -728,15 +690,26 @@ strong {
     padding: 5px 0;
   }
 
+  /* Content before chrome: a phone screen is short, and the sidebar (name,
+     tagline, portrait, six-button menu) would otherwise push the thing the
+     reader actually came for below the fold. Flex order moves it after the
+     page content visually without touching the source order, so it's still
+     first in the document for screen readers and tab order. */
   .layout {
-    display: block;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main {
+    order: 1;
   }
 
   .sidebar {
+    order: 2;
     width: auto;
     position: static;
     border-right: 0;
-    border-bottom: 1px solid var(--rule);
+    border-top: 1px solid var(--rule);
     padding: 20px 16px;
   }
 
