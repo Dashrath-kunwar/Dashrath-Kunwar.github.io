@@ -20,7 +20,7 @@
 
     // Keep the browser chrome (mobile address bar) in step with the page.
     var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', current() === 'light' ? '#eae7dd' : '#0c0c0c');
+    if (meta) meta.setAttribute('content', current() === 'light' ? '#f5ecdc' : '#0c0c0c');
   }
 
   button.addEventListener('click', function () {

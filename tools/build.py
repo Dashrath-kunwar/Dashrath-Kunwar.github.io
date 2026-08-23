@@ -58,13 +58,12 @@ TAGLINE = (
 )
 
 # Running document pages: one Markdown file rendered straight into one page.
-# Everything writable from Obsidian lives here — no HTML editing required.
 DOCS = {
     "home": ("home.md", "index.html", "HOME"),
 }
 
-# Obsidian drops attachments in posts/images/. They get copied into the served
-# tree so the pages can reach them, and both link styles are rewritten to match.
+# Drop image attachments in posts/images/ and they get copied into the served
+# tree so the pages can reach them.
 UPLOADS_SRC = os.path.join(POSTS, "images")
 UPLOADS_REL = "img/uploads"
 UPLOADS_DST = os.path.join(ROOT, "img", "uploads")
@@ -127,8 +126,8 @@ def load_posts(include_drafts):
             continue
         if name.startswith("."):
             continue
-        # Running documents live in posts/ so Obsidian sees them, but they
-        # are whole pages of their own, not essays.
+        # Running documents live in posts/ too, but they are whole pages of
+        # their own, not essays.
         if name.lower() in {md for md, _, _ in DOCS.values()}:
             continue
 
@@ -136,7 +135,8 @@ def load_posts(include_drafts):
         raw = open(path, encoding="utf-8").read()
         meta, body = parse_front_matter(raw)
 
-        if str(meta.get("draft", "")).lower() in ("true", "yes", "1") and not include_drafts:
+        is_draft = str(meta.get("draft", "")).lower() in ("true", "yes", "1")
+        if is_draft and not include_drafts:
             skipped.append(name)
             continue
 
@@ -158,7 +158,7 @@ def load_posts(include_drafts):
         if not title:
             sys.exit(f"{name}: no title. Add `title: ...` to the front matter.")
 
-        content = markdown.markdown(expand_obsidian(body), extensions=MD_EXTENSIONS,
+        content = markdown.markdown(body, extensions=MD_EXTENSIONS,
                                     output_format="html5")
         # Essays sit one level down, so their attachment links need ../.
         content = fix_image_paths(content, "../")
@@ -174,6 +174,7 @@ def load_posts(include_drafts):
                 "description": meta.get("description") or summarise(content),
                 "content": content,
                 "url": f"writings/{slug}.html",
+                "draft": is_draft,
             }
         )
 
@@ -351,30 +352,15 @@ def build_sidebar(prefix, current):
 PAGE_SECTION = {
     "index.html": "home",
     "writings.html": "writing",
-    "install.html": None,
     "404.html": None,
 }
-
-
-def expand_obsidian(body):
-    """Turn Obsidian's own embed syntax into Markdown the renderer understands.
-
-    Obsidian writes ![[photo.png]] when you drag a file in. Nothing else on
-    earth reads that, so it becomes a normal image here rather than something
-    the author has to remember to rewrite by hand every time.
-    """
-    def embed(m):
-        target = m.group(1).split("|")[0].strip()      # ![[file.png|500]]
-        name = os.path.basename(target)
-        return f"![]({UPLOADS_REL}/{name})"
-    return re.sub(r"!\[\[([^\]]+)\]\]", embed, body)
 
 
 def fix_image_paths(html_text, prefix):
     """Point attachment links at the copies in the served tree.
 
     Also mark every image lazy: essay and doc images are attachments dropped
-    in from Obsidian, never the above-the-fold banner or profile art (those
+    into posts/images/, never the above-the-fold banner or profile art (those
     live in the hand-written template, not here), so deferring them is safe.
     """
     html_text = re.sub(r'src="(?:\./)?images/', f'src="{prefix}{UPLOADS_REL}/', html_text)
@@ -410,7 +396,6 @@ def render_doc(md_name, prefix=""):
     if not os.path.exists(src):
         return None
     _, body = parse_front_matter(open(src, encoding="utf-8").read())
-    body = expand_obsidian(body)
     out = markdown.markdown(body, extensions=MD_EXTENSIONS, output_format="html5")
     out = fix_image_paths(out, prefix)
     # Markdown passes HTML comments through; the notes-to-self at the top of
@@ -459,9 +444,14 @@ def main():
 
     writes = dict(pages)
 
+    # --drafts renders a draft's own page so it can be previewed, but a draft
+    # never belongs in the archive, feed, or sitemap — those always come from
+    # published posts only.
+    listed = [p for p in posts if not p["draft"]]
+
     index_path = os.path.join(ROOT, "writings.html")
     writes[index_path] = replace_region(
-        open(index_path, encoding="utf-8").read(), "ENTRIES", build_entries(posts)
+        open(index_path, encoding="utf-8").read(), "ENTRIES", build_entries(listed)
     )
 
     # ---- Running documents (currently just the homepage).
@@ -484,18 +474,18 @@ def main():
 
     feed_path = os.path.join(ROOT, "feed.xml")
     feed = open(feed_path, encoding="utf-8").read()
-    feed = replace_region(feed, "ITEMS", build_feed_items(posts))
+    feed = replace_region(feed, "ITEMS", build_feed_items(listed))
     # Stamp the newest post's date. With no posts, leave whatever is already
     # there — using today's date would rewrite the feed on every new day and
     # produce a commit that changes nothing anyone can see.
-    if posts:
+    if listed:
         feed = re.sub(r"<lastBuildDate>.*?</lastBuildDate>",
-                      f"<lastBuildDate>{rfc822(posts[0]['date'])}</lastBuildDate>", feed)
+                      f"<lastBuildDate>{rfc822(listed[0]['date'])}</lastBuildDate>", feed)
     writes[feed_path] = feed
 
     sitemap_path = os.path.join(ROOT, "sitemap.xml")
     writes[sitemap_path] = replace_region(
-        open(sitemap_path, encoding="utf-8").read(), "POSTS", build_sitemap_urls(posts)
+        open(sitemap_path, encoding="utf-8").read(), "POSTS", build_sitemap_urls(listed)
     )
 
     sw_path = os.path.join(ROOT, "sw.js")
@@ -512,7 +502,7 @@ def main():
                 os.makedirs(os.path.dirname(path), exist_ok=True)
                 open(path, "w", encoding="utf-8", newline="\n").write(content)
 
-    # ---- Obsidian attachments into the served tree.
+    # ---- Image attachments into the served tree.
     sync_uploads(changed, args.check)
 
     # Remove pages whose source Markdown is gone, and any leftover .pdf from
@@ -539,9 +529,12 @@ def main():
                 os.remove(os.path.join(downloads, name))
             os.rmdir(downloads)
 
-    print(f"{len(posts)} post(s) published" + (f", {len(skipped)} draft(s) skipped" if skipped else ""))
-    for p in posts:
+    print(f"{len(listed)} post(s) published" + (f", {len(skipped)} draft(s) skipped" if skipped else ""))
+    for p in listed:
         print(f"  {p['date']}  {p['url']}")
+    for p in posts:
+        if p["draft"]:
+            print(f"  {p['date']}  {p['url']}  (draft, not listed)")
     for s in skipped:
         print(f"  draft     posts/{s}")
 

@@ -12,12 +12,9 @@ on:
       - 'tools/**'
       - 'style.css'
       - 'index.html'
-      - 'books.html'
       - '404.html'
-      - 'install.html'
       - 'theme.js'
       - 'share.js'
-      - 'books-search.js'
       - 'sw-register.js'
       - '.github/workflows/build.yml'
   workflow_dispatch:

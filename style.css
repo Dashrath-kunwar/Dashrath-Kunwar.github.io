@@ -57,13 +57,13 @@
 }
 
 :root[data-theme='light'] {
-  --bg: #eae7dd;
+  --bg: #f5ecdc;          /* warm ivory paper, not stark white */
   --fg: #26402a;
   --head: #a3231a;        /* the dark-mode red is unreadable on paper */
   --em: #0f6e63;          /* likewise, the dark-mode teal needs deepening on paper */
   --dim: #4a4a45;
   --rule: #26402a;
-  --panel: #e2ded2;
+  --panel: #ecdfc7;
 
   color-scheme: light;
 }
@@ -375,8 +375,8 @@ em {
 }
 
 /* ---------- Markdown-driven pages ----------
-   Home, about, projects and bookmarks are all written in Obsidian and
-   rendered into a .doc wrapper, so they share one set of prose styles. */
+   Running document pages (currently just the homepage) render into a .doc
+   wrapper, so they share one set of prose styles. */
 
 .doc > h2:first-child {
   margin-top: 0;
@@ -423,7 +423,7 @@ em {
   padding: 0;
 }
 
-/* Any picture dropped in from Obsidian gets the same framed treatment. */
+/* Any picture in a doc's body gets the same framed treatment. */
 .doc img {
   display: block;
   width: auto;
