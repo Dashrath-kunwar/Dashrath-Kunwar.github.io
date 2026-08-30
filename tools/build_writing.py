@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-# Renders ~/NOTES/Batcave/Writing/*.md (status: ready) into writing/<slug>.html
-# and regenerates the entry list in writing.html. Nothing else in the repo is
-# ever touched. Run with --check for a dry run (reports, writes nothing).
+# Renders ~/NOTES/Batcave/Writing/*.md (status: ready) into writing/<slug>.html,
+# regenerates the entry list in writing.html, and regenerates feed.xml. Nothing
+# else in the repo is ever touched. Run with --check for a dry run (reports,
+# writes nothing).
 #
 # One bad note aborts the whole run before anything is written — a personal
 # essay site would rather fail loud than half-publish.
@@ -19,6 +20,8 @@ VAULT_WRITING_DIR = Path.home() / "NOTES" / "Batcave" / "Writing"
 WRITING_HTML = REPO_ROOT / "writing.html"
 POSTS_DIR = REPO_ROOT / "writing"
 TEMPLATE = REPO_ROOT / "tools" / "templates" / "post.html"
+FEED_XML = REPO_ROOT / "feed.xml"
+SITE_URL = "https://dashrathkunwar.in"
 
 MD_EXTENSIONS = ["extra", "smarty", "sane_lists"]
 BEGIN_MARK = "<!-- BEGIN ENTRIES -->"
@@ -245,6 +248,44 @@ def replace_entries_region(ready_notes, check, changes):
     sync_file(WRITING_HTML, new_text, check, changes)
 
 
+def rfc822(date_str):
+    return datetime.strptime(date_str, "%Y-%m-%d").strftime("%a, %d %b %Y 00:00:00 GMT")
+
+
+def render_feed(ready_notes, check, changes):
+    """RSS 2.0, regenerated whole from the current desired set each run.
+    lastBuildDate is derived from the newest note's own date, not wall-clock
+    time — a feed.xml stamped with 'now' would never idempotency-check clean,
+    even on a rerun with zero real changes."""
+    ordered = sorted(ready_notes, key=lambda f: f["date"], reverse=True)
+    items = []
+    for fields in ordered:
+        url = f"{SITE_URL}/writing/{fields['slug']}.html"
+        items.append(
+            "    <item>\n"
+            f"      <title>{html.escape(fields['title'])}</title>\n"
+            f"      <link>{url}</link>\n"
+            f"      <guid>{url}</guid>\n"
+            f"      <pubDate>{rfc822(fields['date'])}</pubDate>\n"
+            f"      <description>{html.escape(fields['excerpt'])}</description>\n"
+            "    </item>"
+        )
+    last_build = rfc822(ordered[0]["date"]) if ordered else rfc822("1970-01-01")
+    feed = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<rss version="2.0">\n'
+        "  <channel>\n"
+        "    <title>Dashrath Kunwar</title>\n"
+        f"    <link>{SITE_URL}/writing.html</link>\n"
+        "    <description>New writing from dashrathkunwar.in</description>\n"
+        f"    <lastBuildDate>{last_build}</lastBuildDate>\n"
+        + ("\n".join(items) + "\n" if items else "")
+        + "  </channel>\n"
+        "</rss>\n"
+    )
+    sync_file(FEED_XML, feed, check, changes)
+
+
 # --- main --------------------------------------------------------------
 
 
@@ -298,6 +339,7 @@ def main():
             sync_file(POSTS_DIR / f"{fields['slug']}.html", page, check, changes)
         clean_orphans(seen_slugs.keys(), check, changes)
         replace_entries_region(ready_notes, check, changes)
+        render_feed(ready_notes, check, changes)
     except BuildError as e:
         print(f"error: {e}", file=sys.stderr)
         return 1

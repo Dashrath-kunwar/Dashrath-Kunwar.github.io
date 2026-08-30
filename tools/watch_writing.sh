@@ -1,8 +1,8 @@
 #!/bin/bash
 # Watches the Obsidian Writing/ folder. On a quiet period after a change,
-# builds and — if anything changed — commits writing.html + writing/
-# locally. Never runs git push: that's the user's own step, on purpose,
-# so nothing here ever needs GitHub auth.
+# builds and — if anything changed — commits writing.html + writing/ +
+# feed.xml locally. Never runs git push: that's the user's own step, on
+# purpose, so nothing here ever needs GitHub auth.
 set -u
 
 REPO="/home/kaelorvale/Projects/personal website/Dashrath-Kunwar.github.io"
@@ -23,7 +23,7 @@ run_build() {
 
   cd "$REPO" || return
   mkdir -p writing  # git add fails outright on a path that doesn't exist yet
-  git add writing.html writing/
+  git add writing.html writing/ feed.xml
   git diff --cached --quiet && return
 
   local slugs

@@ -200,6 +200,33 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
     -1px 0 color-mix(in srgb, var(--head) 60%, transparent);
 }
 
+/* the glitch ghost, cashed in: same red/teal split as above, briefly shaken apart on hover */
+@keyframes glitch {
+  0%, 100% {
+    text-shadow:
+      2px 0 color-mix(in srgb, var(--em) 70%, transparent),
+      -1px 0 color-mix(in srgb, var(--head) 60%, transparent);
+  }
+  20% {
+    text-shadow:
+      -4px 1px color-mix(in srgb, var(--em) 85%, transparent),
+      4px -1px color-mix(in srgb, var(--head) 75%, transparent);
+  }
+  40% {
+    text-shadow:
+      3px -2px color-mix(in srgb, var(--em) 80%, transparent),
+      -3px 2px color-mix(in srgb, var(--head) 70%, transparent);
+  }
+  60% {
+    text-shadow:
+      -2px 0 color-mix(in srgb, var(--em) 75%, transparent),
+      2px 0 color-mix(in srgb, var(--head) 65%, transparent);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .wordmark:hover { animation: glitch .35s steps(2, end) 1; }
+}
+
 /* ================= shared reading page (post) ================= */
 .page {
   max-width: var(--measure);
@@ -369,15 +396,33 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
   margin: 2rem 0;
 }
 
-.back-link {
-  display: inline-block;
+.post-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: .5rem 1.5rem;
   margin-top: 3rem;
   padding-top: 1.5rem;
   border-top: 1px dashed color-mix(in srgb, var(--rule) 30%, transparent);
   font-family: var(--mono);
   font-size: .85rem;
+}
+
+.back-link { text-decoration: underline dotted; text-underline-offset: 3px; }
+.back-link:hover { color: var(--em); }
+
+/* styled to match .back-link even though it's a <button>, not an <a> */
+.copy-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
   text-decoration: underline dotted;
   text-underline-offset: 3px;
 }
-.back-link:hover { color: var(--em); }
+.copy-link:hover, .copy-link:focus-visible { color: var(--em); }
+.copy-link.copied { color: var(--head); text-decoration: none; }
 
