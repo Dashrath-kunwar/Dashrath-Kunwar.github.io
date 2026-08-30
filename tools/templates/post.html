@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}} — Dashrath Kunwar</title>
+<meta name="theme-color" content="#121210">
+
+<link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="image/x-icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="manifest" href="../site.webmanifest">
+
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="progress-bar"></div>
+
+<header class="topbar">
+  <a class="mark" href="../index.html">home</a>
+  <nav aria-label="Sections">
+    <a href="../writing.html" aria-current="page">writing</a>
+  </nav>
+</header>
+
+<main id="main">
+  <article class="page">
+    <div class="post-meta">
+      {{TAG_SPAN}}<time>{{DATE}}</time>
+    </div>
+    <h1 class="post-title">{{TITLE}}</h1>
+
+    <div class="post-body">
+{{BODY}}
+    </div>
+
+    <a class="back-link" href="../writing.html">&larr; back to writing</a>
+  </article>
+</main>
+
+<script src="../progress.js" defer></script>
+</body>
+</html>
