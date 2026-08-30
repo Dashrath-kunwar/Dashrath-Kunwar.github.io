@@ -254,6 +254,7 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
   margin-bottom: .4rem;
 }
 .entry-date { color: var(--dim); }
+.entry-time { color: var(--dim); }
 
 .entry h3 {
   margin: 0 0 .4rem;
@@ -332,6 +333,19 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
   text-align: center;
   margin: 2.2rem 0 .9rem;
 }
+
+/* deep link into a section, invisible until you're looking right at it */
+.post-body .header-anchor {
+  opacity: 0;
+  margin-left: .4rem;
+  color: var(--dim);
+  text-decoration: none;
+  transition: opacity .15s ease;
+}
+.post-body h2:hover .header-anchor,
+.post-body h3:hover .header-anchor,
+.post-body .header-anchor:focus-visible { opacity: 1; }
+.post-body .header-anchor:hover { color: var(--em); }
 
 /* no strong/em rules here on purpose — bold and italic are what browsers already do for free */
 .post-body a {

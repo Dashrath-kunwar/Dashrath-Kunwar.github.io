@@ -23,7 +23,12 @@ TEMPLATE = REPO_ROOT / "tools" / "templates" / "post.html"
 FEED_XML = REPO_ROOT / "feed.xml"
 SITE_URL = "https://dashrathkunwar.in"
 
-MD_EXTENSIONS = ["extra", "smarty", "sane_lists"]
+MD_EXTENSIONS = ["extra", "smarty", "sane_lists", "toc"]
+MD_EXTENSION_CONFIGS = {
+    # toc: only used for its side effects (heading ids + a permalink anchor).
+    # never write [TOC] in a note, so the extension's own toc block never renders.
+    "toc": {"permalink": "#", "permalink_class": "header-anchor", "permalink_title": "link to this section"},
+}
 BEGIN_MARK = "<!-- BEGIN ENTRIES -->"
 END_MARK = "<!-- END ENTRIES -->"
 GENERATED_PREFIX = "<!-- generated from Writing/"
@@ -86,7 +91,7 @@ def render_inline(text):
     """Render a markdown fragment and strip the wrapping <p>...</p> — for text
     that needs bold/italic/links but has to end up inside something other than
     a bare paragraph (a pull-quote span, a citation)."""
-    out = markdown.markdown(text.strip(), extensions=MD_EXTENSIONS)
+    out = markdown.markdown(text.strip(), extensions=MD_EXTENSIONS, extension_configs=MD_EXTENSION_CONFIGS)
     m = re.match(r"^<p>(.*)</p>\s*$", out, re.DOTALL)
     return m.group(1) if m else out
 
@@ -160,7 +165,7 @@ def render_body(path, raw_body):
         )
     text = extract_pull_quotes(raw_body)
     text, citations = extract_citations(text)
-    body_html = markdown.markdown(text, extensions=MD_EXTENSIONS)
+    body_html = markdown.markdown(text, extensions=MD_EXTENSIONS, extension_configs=MD_EXTENSION_CONFIGS)
     body_html = splice_citations(body_html, citations)
     body_html = apply_drop_cap(body_html)
     body_html = apply_section_breaks(body_html)
@@ -170,6 +175,14 @@ def render_body(path, raw_body):
 # --- assembling pages / the entry list -------------------------------------
 
 
+def reading_time(raw_body):
+    """Approximate, same as every other blog's estimate: word count / 200wpm.
+    Counted on the raw markdown, not the rendered HTML -- syntax noise
+    (list markers, **, link brackets) is close enough for a personal site."""
+    minutes = max(1, round(len(raw_body.split()) / 200))
+    return f"{minutes} min read"
+
+
 def render_post_page(fields, body_html):
     template = TEMPLATE.read_text(encoding="utf-8")
     title = html.escape(fields["title"])
@@ -177,6 +190,7 @@ def render_post_page(fields, body_html):
     page = template
     page = page.replace("{{TITLE}}", title)
     page = page.replace("{{DATE}}", date_dotted)
+    page = page.replace("{{READING_TIME}}", fields["reading_time"])
     page = page.replace("{{BODY}}", body_html)
     marker = f"{GENERATED_PREFIX}{fields['_source_name']}{GENERATED_SUFFIX}"
     return marker + page
@@ -191,6 +205,7 @@ def render_entry(fields):
         "      <li class=\"entry\">\n"
         "        <div class=\"entry-meta\">\n"
         f"          <time class=\"entry-date\">{date_dotted}</time>\n"
+        f'          <span class="entry-time">{fields["reading_time"]}</span>\n'
         "        </div>\n"
         f'        <h3><a href="writing/{slug}.html">{title}</a></h3>\n'
         f'        <p class="excerpt">{excerpt}</p>\n'
@@ -325,6 +340,7 @@ def main():
         except BuildError as e:
             errors.append(str(e))
             continue
+        fields["reading_time"] = reading_time(body)
         ready_notes.append(fields)
 
     if errors:
