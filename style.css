@@ -225,9 +225,6 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
   font-size: .78rem;
   margin-bottom: .4rem;
 }
-.tag { letter-spacing: .04em; }
-.tag-poem { color: var(--em); }
-.tag-note { color: var(--dim); }
 .entry-date { color: var(--dim); }
 
 .entry h3 {
@@ -264,7 +261,6 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
   color: var(--dim);
   margin-bottom: .75rem;
 }
-.post-meta .tag { margin-right: .6rem; }
 
 .post-title {
   font-family: var(--serif);

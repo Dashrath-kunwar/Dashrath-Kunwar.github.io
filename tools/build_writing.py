@@ -27,7 +27,6 @@ GENERATED_PREFIX = "<!-- generated from Writing/"
 GENERATED_SUFFIX = " by tools/build_writing.py — do not hand-edit -->\n"
 
 SLUG_RE = re.compile(r"^[a-z0-9-]+$")
-TYPES = {"essay", "poem", "note"}
 
 
 class BuildError(Exception):
@@ -71,10 +70,6 @@ def validate(path, fields):
         datetime.strptime(fields["date"], "%Y-%m-%d")
     except ValueError:
         raise BuildError(f"{name}: date '{fields['date']}' must be YYYY-MM-DD")
-
-    note_type = fields.get("type", "essay") or "essay"
-    if note_type not in TYPES:
-        raise BuildError(f"{name}: type '{note_type}' must be one of {sorted(TYPES)}")
 
 
 # --- markdown -> site HTML -------------------------------------------------
@@ -172,21 +167,13 @@ def render_body(path, raw_body):
 # --- assembling pages / the entry list -------------------------------------
 
 
-def tag_span(note_type, css_class="tag"):
-    if note_type == "essay":
-        return ""
-    return f'<span class="{css_class} {css_class}-{note_type}">[{note_type}]</span>\n      '
-
-
 def render_post_page(fields, body_html):
     template = TEMPLATE.read_text(encoding="utf-8")
     title = html.escape(fields["title"])
     date_dotted = fields["date"].replace("-", ".")
-    note_type = fields.get("type", "essay") or "essay"
     page = template
     page = page.replace("{{TITLE}}", title)
     page = page.replace("{{DATE}}", date_dotted)
-    page = page.replace("{{TAG_SPAN}}", tag_span(note_type))
     page = page.replace("{{BODY}}", body_html)
     marker = f"{GENERATED_PREFIX}{fields['_source_name']}{GENERATED_SUFFIX}"
     return marker + page
@@ -197,12 +184,10 @@ def render_entry(fields):
     title = html.escape(fields["title"])
     excerpt = html.escape(fields["excerpt"])
     date_dotted = fields["date"].replace("-", ".")
-    note_type = fields.get("type", "essay") or "essay"
-    tag = tag_span(note_type, css_class="tag").replace("\n      ", "\n          ")
     return (
         "      <li class=\"entry\">\n"
         "        <div class=\"entry-meta\">\n"
-        f"          {tag}<time class=\"entry-date\">{date_dotted}</time>\n"
+        f"          <time class=\"entry-date\">{date_dotted}</time>\n"
         "        </div>\n"
         f'        <h3><a href="writing/{slug}.html">{title}</a></h3>\n'
         f'        <p class="excerpt">{excerpt}</p>\n'
