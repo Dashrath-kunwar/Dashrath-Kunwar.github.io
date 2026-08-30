@@ -22,6 +22,7 @@ run_build() {
   [ "$output" = "nothing to do" ] && return
 
   cd "$REPO" || return
+  mkdir -p writing  # git add fails outright on a path that doesn't exist yet
   git add writing.html writing/
   git diff --cached --quiet && return
 

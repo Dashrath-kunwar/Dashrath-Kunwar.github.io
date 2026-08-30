@@ -48,7 +48,11 @@ def parse_note(path):
         if not line.strip():
             continue
         key, _, value = line.partition(":")
-        fields[key.strip()] = value.strip()
+        value = value.strip()
+        value = re.sub(r"\s+#.*$", "", value)  # trailing ' # comment', not a bare #hashtag
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+            value = value[1:-1]
+        fields[key.strip()] = value
     return fields, body.lstrip("\n")
 
 
