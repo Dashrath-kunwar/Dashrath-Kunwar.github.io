@@ -7,6 +7,7 @@
   var timer = null;
 
   btn.addEventListener('click', function () {
+    if (!navigator.clipboard) return; // e.g. opened over file:// instead of https
     navigator.clipboard.writeText(location.href).then(function () {
       btn.textContent = 'copied';
       btn.classList.add('copied');
@@ -15,6 +16,6 @@
         btn.textContent = label;
         btn.classList.remove('copied');
       }, 1500);
-    });
+    }).catch(function () {});
   });
 })();
