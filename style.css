@@ -301,7 +301,7 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
 }
 
 /* the actual writing. font-size and line-height are set once here and everything inside inherits them. */
-.post-body { font-size: 1rem; line-height: 1.8; }
+.post-body { font-size: 1.125rem; line-height: 1.8; }
 .post-body p { margin: 0 0 1.4rem; }
 .post-body p:last-child { margin-bottom: 0; } /* also catches the last <p> in a blockquote — one rule, not two */
 .post-body .drop::first-letter {
