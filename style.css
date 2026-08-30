@@ -1,10 +1,7 @@
-/* dashrathkunwar.in
-   Bordered frame, sticky sidebar, monospace body, blackletter display.
-   Old-web personal site: hard edges, no motion, everything on screen at once. */
+/* one stylesheet, one theme, no build step. if it gets bigger than this, something's wrong. */
 
-/* ---------- Fonts ----------
-   Self-hosted, so no third-party request. Roboto Mono carries everything;
-   UnifrakturCook is display only and never used for running text. */
+/* only Crimson Pro comes from Google — Roboto Mono and UnifrakturCook are self-hosted below */
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400..700;1,400..700&display=swap');
 
 @font-face {
   font-family: 'Roboto Mono';
@@ -39,751 +36,352 @@
 }
 
 :root {
-  --bg: #0c0c0c;
-  --fg: #a7d1ab;          /* sage: body text, borders, links */
-  --head: #ff4a3d;        /* headings, and the weight of bold text */
-  --em: #5fd3c4;          /* teal: italics only, a second accent for emphasis */
-  --dim: #9a9a9a;         /* dates, subtitle, footer */
-  --rule: #a7d1ab;
-  --panel: #101010;
+  /* every color on the site lives here. change a mood, change five lines, not fifty. */
+  --bg: #121210;          /* warm near-black, softer than pure black */
+  --fg: #cdc0a3;          /* soft warm oat: body text — dimmer and less blue than parchment white, gentle on long reads */
+  --head: #ff4a3d;        /* headings, accents, the halftone's red */
+  --em: #5fd3c4;          /* teal: emphasis, hover, the glitch ghost */
+  --dim: #8a8270;         /* dates, meta, quiet text */
+  --rule: #6b6555;        /* raw material for borders — always used through --hairline below, never bare */
+  --panel: #19180f;
+  --hairline: color-mix(in srgb, var(--rule) 18%, transparent); /* the faint divider used everywhere; tune once here */
 
-  --mono: 'Roboto Mono', ui-monospace, Consolas, monospace;
-  --display: 'UnifrakturCook', 'Times New Roman', serif;
+  --serif: 'Crimson Pro', Georgia, 'Times New Roman', serif; /* reading: prose, titles */
+  --mono: 'Roboto Mono', ui-monospace, Consolas, monospace; /* chrome: nav, tags, meta */
+  --display: 'UnifrakturCook', 'Times New Roman', serif;    /* the homepage wordmark. nowhere else. */
 
-  --frame: 1152px;
-  --sidebar: 320px;
+  --measure: 62ch;
 
-  color-scheme: dark;
+  color-scheme: dark; /* only theme that exists. don't add a light one back. */
 }
 
-:root[data-theme='light'] {
-  --bg: #f5ecdc;          /* warm ivory paper, not stark white */
-  --fg: #26402a;
-  --head: #a3231a;        /* the dark-mode red is unreadable on paper */
-  --em: #0f6e63;          /* likewise, the dark-mode teal needs deepening on paper */
-  --dim: #4a4a45;
-  --rule: #26402a;
-  --panel: #ecdfc7;
-
-  color-scheme: light;
-}
+*, *::before, *::after { box-sizing: border-box; }
 
 html {
-  /* Keeps rendered size identical across devices: stops iOS inflating text on
-     rotation and Chrome's mobile font boosting rewriting the sizes. */
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   background: var(--bg);
-  /* Links and buttons already invert instantly on press (see a:hover below).
-     The browser's own tap-highlight box would flash over that, so it's off. */
-  -webkit-tap-highlight-color: transparent;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-/* No motion anywhere. A guard, so a later addition can't quietly introduce one. */
-*,
-*::before,
-*::after {
-  animation: none !important;
-  transition: none !important;
 }
 
 body {
+  margin: 0;
+  min-height: 100vh;
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--mono);
-  font-size: 15px;
-  line-height: 1.6;
-  margin: 0;
-  padding: 32px 16px;
-  overflow-wrap: break-word;
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.7;
+  position: relative;
 }
 
-[hidden] {
-  display: none !important;
+/* CRT scanlines. kept faint on purpose — texture, not a vision test */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,.025) 0px,
+    rgba(255,255,255,.025) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
 }
 
-/* ---------- Frame ---------- */
+a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on purpose below. */
 
-.layout {
-  display: flex;
-  align-items: stretch;
-  max-width: var(--frame);
-  margin: 0 auto;
-  border: 1px solid var(--rule);
-}
+::selection { background: var(--em); color: var(--bg); }
 
-.sidebar {
-  flex: none;
-  width: var(--sidebar);
-  padding: 32px 24px;
-  border-right: 1px solid var(--rule);
-  align-self: flex-start;
+.skip-link { position: absolute; left: -9999px; } /* screen readers only. sighted mouse users will never see it and that's fine. */
+
+/* nav bar, same on every page. mobile-first: wraps to two rows if it has to, never scrolls sideways. */
+.topbar {
   position: sticky;
-  top: 32px;
-  /* Chrome repaints a sticky element's border a frame late during scroll,
-     leaving a ghost line beside the real one. Promoting it to its own
-     compositing layer keeps the border pinned to the box every frame. */
-  will-change: transform;
-}
-
-.main {
-  flex: 1;
-  min-width: 0;              /* lets long content shrink instead of blowing the frame */
-  display: flex;
-  flex-direction: column;
-}
-
-.content {
-  flex: 1;
-  padding: 32px;
-}
-
-/* ---------- Sidebar ---------- */
-
-.sidebar-top {
-  padding-bottom: 14px;
-  margin-bottom: 14px;
-  border-bottom: 1px solid var(--rule);
-}
-
-.sitename {
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 38px;
-  line-height: 1.1;
-  margin: 0;
-  color: var(--fg);
-}
-
-.sitename a {
-  color: inherit;
-  border: 0;
-}
-
-.sitename a:hover {
-  background: var(--fg);
-  color: var(--bg);
-}
-
-.subtitle {
-  color: var(--dim);
-  font-size: 12px;
-  line-height: 1.6;
-  margin: 0 0 14px;
-}
-
-/* inline-block so the frame hugs the picture instead of the whole pane. */
-.profile {
-  display: inline-block;
-  border: 1px solid var(--rule);
-  padding: 8px;
-  margin: 0 0 14px;
-  line-height: 0;
-}
-
-.profile img {
-  display: block;
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 168px;
-}
-
-/* Buttons that wrap across the pane rather than a column you scroll.
-   Keeps the whole menu to two rows however many sections there are. */
-.menu ul {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin: 0;
-  padding: 0;
-}
-
-.menu a {
-  display: block;
-  padding: 3px 6px;
-  border: 1px solid var(--rule);
-  font-size: 15px;
-  line-height: 1.3;
-  white-space: nowrap;
-}
-
-.menu a:hover {
-  background: var(--fg);
-  color: var(--bg);
-}
-
-/* The page you're on reads as filled. */
-.menu a[aria-current='page'] {
-  background: var(--fg);
-  color: var(--bg);
-}
-
-.sidebar-foot {
-  margin-top: 24px;
-  padding-top: 14px;
-  border-top: 1px solid var(--rule);
-  color: var(--dim);
-  font-size: 12px;
-}
-
-.thumos {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4em;
-}
-
-.thumos img {
-  width: 1.1em;
-  height: 1.1em;
-  flex: none;
-}
-
-/* ---------- Links ---------- */
-
-a {
-  color: var(--fg);
-  text-decoration: none;
-  border-bottom: 1px solid currentColor;
-}
-
-/* Instant inversion, no fade. */
-a:hover {
-  background: var(--fg);
-  color: var(--bg);
-  border-bottom-color: transparent;
-}
-
-/* Bold and italic carry their own accent colors (see strong/em below), which
-   would otherwise fight a:hover's inverted background — including matching
-   it exactly, in bold's case, and vanishing. Emphasis inside a link always
-   takes the link's inverted color instead, whatever that emphasis color is. */
-a:hover strong,
-a:hover em {
-  color: inherit;
-}
-
-a:focus-visible,
-:focus-visible {
-  outline: 2px solid var(--fg);
-  outline-offset: 1px;
-}
-
-.skip-link {
-  position: absolute;
-  left: -9999px;
-}
-
-.skip-link:focus {
-  position: static;
-  display: inline-block;
-  margin-bottom: 1rem;
-}
-
-/* ---------- Type ---------- */
-
-h1,
-h2,
-h3 {
-  font-family: var(--display);
-  font-weight: 700;
-  color: var(--head);
-  line-height: 1.15;
-  overflow-wrap: break-word;
-}
-
-h1 {
-  font-size: 40px;
-  margin: 0 0 14px;
-}
-
-h2 {
-  font-size: 28px;
-  margin: 22px 0 10px;
-}
-
-h3 {
-  font-size: 21px;
-  margin: 24px 0 10px;
-}
-
-/* Running copy is the same sage as the interface — the dim grey is reserved
-   for genuinely secondary things (dates, subtitle, footer). */
-p {
-  margin: 0 0 16px;
-}
-
-hr {
-  border: 0;
-  border-top: 1px solid var(--rule);
-  margin: 24px 0;
-}
-
-/* Bold and italic get their own accents instead of sitting in body-color
-   sage — a little flourish, and a second visual register beyond the
-   headings' red. Bold borrows that same red, since both carry the same
-   weight; italics get their own cooler teal. */
-strong {
-  color: var(--head);
-}
-
-em {
-  color: var(--em);
-}
-
-/* ---------- Content ---------- */
-
-.content img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* width and height must both be auto: the intrinsic attributes on the tag count
-   as a specified width, which switches off the ratio-preserving path and lets
-   max-width and max-height clamp independently — that squashes the artwork. */
-.banner {
-  display: block;
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 320px;
-  margin: 0 0 24px;
-  border: 1px solid var(--rule);
-}
-
-/* Wide decorative strip at the top of the page. Two-tone and dithered, so it
-   sits on either theme without a second file. */
-.header-art {
-  display: block;
-  width: 100%;
-  height: auto;
-  border: 1px solid var(--rule);
-  margin: 0 0 18px;
-}
-
-.box {
-  border: 1px solid var(--rule);
-  padding: 12px 14px;
-  margin: 0 0 18px;
-}
-
-/* ---------- Markdown-driven pages ----------
-   Running document pages (currently just the homepage) render into a .doc
-   wrapper, so they share one set of prose styles. */
-
-.doc > h2:first-child {
-  margin-top: 0;
-}
-
-.doc ul,
-.doc ol {
-  margin: 0 0 16px;
-  padding-left: 22px;
-}
-
-.doc li {
-  margin-bottom: 6px;
-}
-
-.doc blockquote {
-  margin: 20px 0;
-  padding-left: 16px;
-  border-left: 2px solid var(--rule);
-}
-
-.doc blockquote p:last-child {
-  margin-bottom: 0;
-}
-
-.doc code {
-  background: var(--panel);
-  border: 1px solid var(--rule);
-  padding: 0 4px;
-  font-size: 0.92em;
-}
-
-.doc pre {
-  background: var(--panel);
-  border: 1px solid var(--rule);
-  padding: 12px;
-  overflow-x: auto;
-  margin: 0 0 16px;
-}
-
-.doc pre code {
-  background: none;
-  border: 0;
-  padding: 0;
-}
-
-/* Any picture in a doc's body gets the same framed treatment. */
-.doc img {
-  display: block;
-  width: auto;
-  height: auto;
-  max-width: min(100%, 300px);
-  border: 1px solid var(--rule);
-  padding: 8px;
-  margin: 0 0 18px;
-}
-
-.box > :last-child {
-  margin-bottom: 0;
-}
-
-/* ---------- Post list ---------- */
-
-.posts {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.posts li {
-  display: flex;
-  gap: 16px;
-  align-items: baseline;
-  padding: 7px 0;
-  border-bottom: 1px dotted var(--rule);
-}
-
-.posts li:last-child {
-  border-bottom: 0;
-}
-
-.posts time {
-  flex: none;
-  color: var(--dim);
-  font-size: 13px;
-  font-variant-numeric: tabular-nums;
-}
-
-.empty {
-  color: var(--dim);
-}
-
-/* ---------- Essay ---------- */
-
-/* Essay headings read as centered display type, title down to the smallest
-   section head — unlike the left-aligned heads everywhere else on the site.
-   Scoped to .post, so it applies to every essay by default: the title and
-   every ##/### heading a post's Markdown produces, with no per-post work. */
-.post h1,
-.post h2,
-.post h3 {
-  text-align: center;
-}
-
-.post-header {
-  padding-bottom: 14px;
-  margin-bottom: 24px;
-  border-bottom: 1px solid var(--rule);
-}
-
-.post-header h1 {
-  margin-bottom: 8px;
-}
-
-.post-header time {
-  color: var(--dim);
-  font-size: 13px;
-}
-
-.post blockquote {
-  margin: 20px 0;
-  padding-left: 16px;
-  border-left: 2px solid var(--rule);
-  color: var(--fg);
-}
-
-.post blockquote p {
-  color: inherit;
-}
-
-.post blockquote p:last-child {
-  margin-bottom: 0;
-}
-
-.post blockquote cite {
-  display: block;
-  margin-top: 8px;
-  color: var(--dim);
-  font-size: 13px;
-  font-style: normal;
-}
-
-.post blockquote cite::before {
-  content: '— ';
-}
-
-.post ul,
-.post ol {
-  margin: 0 0 16px;
-  padding-left: 22px;
-}
-
-.post li {
-  margin-bottom: 5px;
-}
-
-.post code {
-  background: var(--panel);
-  border: 1px solid var(--rule);
-  padding: 0 4px;
-  font-size: 0.92em;
-}
-
-.post pre {
-  background: var(--panel);
-  border: 1px solid var(--rule);
-  padding: 12px;
-  overflow-x: auto;
-  margin: 0 0 16px;
-  color: var(--fg);
-}
-
-.post pre code {
-  background: none;
-  border: 0;
-  padding: 0;
-}
-
-.post figure {
-  margin: 24px 0;
-}
-
-.post figcaption {
-  margin-top: 6px;
-  color: var(--dim);
-  font-size: 13px;
-}
-
-/* ---------- Controls ---------- */
-
-.btn,
-.theme-toggle {
-  display: inline-block;
-  background: none;
-  color: var(--fg);
-  border: 1px solid var(--rule);
-  padding: 3px 9px;
-  font: inherit;
-  font-size: 13px;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.btn:hover,
-.theme-toggle:hover {
-  background: var(--fg);
-  color: var(--bg);
-}
-
-.btn:focus-visible,
-.theme-toggle:focus-visible {
-  outline: 2px solid var(--fg);
-  outline-offset: 1px;
-}
-
-/* ---------- Sharing ---------- */
-
-.share {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin-top: 32px;
-  padding-top: 16px;
-  border-top: 1px solid var(--rule);
-}
-
-.share-label {
-  color: var(--dim);
-  font-size: 13px;
-  margin-right: 4px;
-}
-
-.share-note {
-  width: 100%;
-  margin: 6px 0 0;
-  color: var(--dim);
-  font-size: 12px;
-}
-
-.selection-share {
-  position: absolute;
+  top: 0;
   z-index: 50;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 1px;
-  padding: 1px;
-  background: var(--rule);
-  border: 1px solid var(--rule);
-}
-
-.selection-share button {
-  background: var(--bg);
-  border: 0;
-  color: var(--fg);
-  font: inherit;
-  font-size: 13px;
-  padding: 4px 9px;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.selection-share button:hover {
-  background: var(--fg);
-  color: var(--bg);
-}
-
-::target-text {
-  background: var(--fg);
-  color: var(--bg);
-}
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* ---------- Footer ---------- */
-
-.site-footer {
-  border-top: 1px solid var(--rule);
-  padding: 16px 32px;
-  color: var(--dim);
-  font-size: 12px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 18px;
   align-items: center;
+  justify-content: center;
+  row-gap: .5rem;
+  column-gap: 1rem;
+  padding: .85rem 1rem;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--hairline);
+  font-family: var(--mono);
+  font-size: .78rem;
+  letter-spacing: .06em;
 }
 
-.site-footer p {
+.topbar .mark {
+  text-transform: lowercase;
+  text-decoration: none;
+  color: var(--fg);
+  opacity: .85;
+}
+.topbar .mark:hover { color: var(--em); opacity: 1; }
+
+.topbar nav { display: flex; gap: 1.25rem; }
+.topbar nav a {
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(in srgb, var(--fg) 45%, transparent);
+  color: var(--fg);
+  padding: .25rem 0;
+  transition: color .15s ease;
+}
+.topbar nav a:hover, .topbar nav a:focus-visible {
+  color: var(--em);
+  text-decoration-color: var(--em);
+}
+.topbar nav a[aria-current='page'] { color: var(--head); text-decoration-color: var(--head); }
+
+@media (min-width: 560px) {
+  .topbar {
+    justify-content: space-between;
+    padding: 1rem clamp(1rem, 4vw, 2.5rem);
+    font-size: .8rem;
+  }
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.1;
+  color: var(--head);
+  text-align: center;
   margin: 0;
-  color: inherit;
 }
 
-/* ---------- Narrow screens ----------
-   The frame stacks rather than scrolling sideways. The reference does not do
-   this; a site that can't be read on a phone is not worth shipping. */
-
-@media (max-width: 56rem) {
-  /* Everything goes up a step on a phone. 15px mono is fine at arm's length
-     on a monitor and too tight held in one hand. */
-  body {
-    padding: 16px 12px;
-    font-size: 16px;
-    line-height: 1.65;
-  }
-
-  .subtitle,
-  .site-footer,
-  .share-note {
-    font-size: 13px;
-  }
-
-  .posts time,
-  .post-header time,
-  .post blockquote cite,
-  .post figcaption {
-    font-size: 14px;
-  }
-
-  .menu a,
-  .btn,
-  .theme-toggle {
-    font-size: 16px;
-    padding: 7px 10px;      /* a real tap target, not a mouse-sized one */
-  }
-
-  /* Standalone links — footer, post rows, link lists — get enough height to
-     hit with a thumb. Links inside running sentences are left alone: WCAG
-     exempts them, and padding them would wreck the line rhythm. */
-  .site-footer a,
-  .posts a,
-  .content > ul a {
-    display: inline-block;
-    padding: 5px 0;
-  }
-
-  /* Content before chrome: a phone screen is short, and the sidebar (name,
-     tagline, portrait, six-button menu) would otherwise push the thing the
-     reader actually came for below the fold. Flex order moves it after the
-     page content visually without touching the source order, so it's still
-     first in the document for screen readers and tab order. */
-  .layout {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .main {
-    order: 1;
-  }
-
-  .sidebar {
-    order: 2;
-    width: auto;
-    position: static;
-    border-right: 0;
-    border-top: 1px solid var(--rule);
-    padding: 20px 16px;
-    will-change: auto;    /* not sticky here, so no layer needed */
-  }
-
-  /* Name and menu are the home screen's business. Everywhere else on a
-     phone — the archive, an essay, install instructions — is just the
-     content: nothing else competing for the reader's attention. */
-  body:not(.page-home) .sidebar {
-    display: none;
-  }
-
-  .profile {
-    max-width: 240px;
-  }
-
-  .menu ul {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 4px 14px;
-  }
-
-  .content {
-    padding: 20px 16px;
-  }
-
-  .site-footer {
-    padding: 14px 16px;
-  }
-
-  h1 { font-size: 32px; }
-  h2 { font-size: 24px; }
+.placeholder {
+  color: var(--em);
+  font-style: italic;
+  opacity: .85;
 }
 
-@media (max-width: 26rem) {
-  .posts li {
-    display: block;
-    padding: 8px 0;
-  }
-
-  .posts time {
-    display: block;
-    margin-top: 2px;
-  }
+/* ================= HOME ================= */
+.hero {
+  min-height: calc(100dvh - 60px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 1rem 3rem;
 }
+
+.frame {
+  padding: 10px;
+  background: var(--panel);
+  border: 1px solid color-mix(in srgb, var(--rule) 35%, transparent);
+  max-width: min(90vw, 640px);
+}
+.frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* the name, in the blackletter font, once, on the homepage. that's the entire budget for this typeface. */
+.wordmark {
+  font-family: var(--display);
+  font-weight: 700;
+  color: var(--head);
+  margin: 2rem 0 0;
+  line-height: 1.05;
+  font-size: clamp(2.4rem, 8vw, 4.6rem);
+  text-shadow:
+    2px 0 color-mix(in srgb, var(--em) 70%, transparent),
+    -1px 0 color-mix(in srgb, var(--head) 60%, transparent);
+}
+
+/* ================= shared reading page (post) ================= */
+.page {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: clamp(2rem, 8vw, 4rem) clamp(1rem, 4vw, 2.5rem) clamp(3rem, 10vw, 6rem);
+}
+
+.page .section-title { font-size: clamp(2rem, 9vw, 3.2rem); margin-bottom: 2rem; }
+
+/* ================= WRITING (index) ================= */
+.entry-list { list-style: none; margin: 0; padding: 0; }
+.entry {
+  padding: 1.6rem 0;
+  border-bottom: 1px solid var(--hairline);
+}
+.entry:first-child { border-top: 1px solid var(--hairline); }
+
+.entry-meta {
+  display: flex;
+  gap: .75rem;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: .78rem;
+  margin-bottom: .4rem;
+}
+.tag { letter-spacing: .04em; }
+.tag-poem { color: var(--em); }
+.tag-note { color: var(--dim); }
+.entry-date { color: var(--dim); }
+
+.entry h3 {
+  margin: 0 0 .4rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.entry h3 a {
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 30%, transparent);
+  transition: color .15s ease, border-color .15s ease;
+}
+.entry h3 a:hover, .entry h3 a:focus-visible {
+  color: var(--em);
+  border-color: var(--em);
+}
+
+.entry .excerpt { margin: 0; color: var(--dim); font-size: .92rem; }
+
+/* ================= POST ================= */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  width: 0%;
+  background: var(--head);
+  z-index: 100;
+  transition: width .08s linear;
+}
+
+.post-meta {
+  font-family: var(--mono);
+  font-size: .8rem;
+  color: var(--dim);
+  margin-bottom: .75rem;
+}
+.post-meta .tag { margin-right: .6rem; }
+
+.post-title {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(1.7rem, 6vw, 2.4rem);
+  color: var(--fg);
+  text-align: center;
+  margin: 0 0 2.5rem;
+  line-height: 1.4;
+}
+
+/* the actual writing. font-size and line-height are set once here and everything inside inherits them. */
+.post-body { font-size: 1rem; line-height: 1.8; }
+.post-body p { margin: 0 0 1.4rem; }
+.post-body p:last-child { margin-bottom: 0; } /* also catches the last <p> in a blockquote — one rule, not two */
+.post-body .drop::first-letter {
+  font-family: var(--display);
+  font-size: 3.6rem;
+  color: var(--head);
+  float: left;
+  line-height: .8;
+  margin: .1rem .35rem 0 0;
+}
+
+/* headings inside an article, not to be confused with the site's own nav/tag headings above */
+.post-body h2 {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(1.35rem, 4.5vw, 1.7rem);
+  color: var(--head);
+  line-height: 1.4;
+  text-align: center;
+  margin: 3rem 0 1.1rem;
+}
+.post-body h3 {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(1.1rem, 3.5vw, 1.3rem);
+  color: var(--head);
+  line-height: 1.4;
+  text-align: center;
+  margin: 2.2rem 0 .9rem;
+}
+
+/* no strong/em rules here on purpose — bold and italic are what browsers already do for free */
+.post-body a {
+  color: var(--em);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.post-body a:hover, .post-body a:focus-visible { color: var(--head); }
+
+/* pull-quote: one big line, no attribution. use it once or twice a piece or it stops meaning anything */
+.pull-quote {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.15rem, 3.5vw, 1.35rem);
+  line-height: 1.5;
+  color: var(--fg);
+  text-align: center;
+  max-width: 30rem;
+  margin: 2.5rem auto;
+}
+
+/* blockquote is for quoting someone else. pull-quote is for quoting yourself. don't mix them up */
+.post-body blockquote {
+  margin: 2rem 0;
+  padding-left: 1.2rem;
+  border-left: 2px solid var(--em);
+  font-style: italic;
+  color: var(--em);
+}
+.post-body blockquote cite {
+  display: block;
+  margin-top: .5rem;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: .78rem;
+  color: var(--dim);
+}
+
+/* section break: a scene change that doesn't deserve its own heading */
+.section-break {
+  text-align: center;
+  color: var(--dim);
+  letter-spacing: .4em;
+  margin: 3rem 0;
+  font-size: .9rem;
+  user-select: none;
+}
+
+.post-body ul, .post-body ol {
+  margin: 0 0 1.4rem;
+  padding-left: 1.4rem;
+}
+.post-body li { margin-bottom: .5rem; }
+.post-body li::marker { color: var(--head); }
+
+/* dashed box for a note to yourself, not for the reader. delete it before you publish */
+.post-body .aside {
+  font-family: var(--mono);
+  font-size: .82rem;
+  color: var(--em);
+  border: 1px dashed color-mix(in srgb, var(--rule) 40%, transparent);
+  padding: 1rem 1.2rem;
+  margin: 2rem 0;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed color-mix(in srgb, var(--rule) 30%, transparent);
+  font-family: var(--mono);
+  font-size: .85rem;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+.back-link:hover { color: var(--em); }
+
