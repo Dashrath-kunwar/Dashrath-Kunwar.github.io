@@ -31,11 +31,11 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
-  /* nearly every font-size on the site is in rem (root-relative) or em
-     cascading from body's own rem-based size, so scaling the root here
-     scales everything proportionally in one place instead of touching
-     a dozen individual declarations */
-  font-size: 82%;
+  /* 100%: body's rem sizes below (1/1.0625/1.125/1.1875rem) are the exact
+     16/17/18/19px scale fromjason.xyz sets via --body--mobile/-hz/-tablet/
+     -desktop, confirmed straight from their CSS. don't scale this root
+     value again or that match breaks. */
+  font-size: 100%;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   background: var(--bg);
