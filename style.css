@@ -171,22 +171,6 @@ body {
   -webkit-text-stroke: 0;
 }
 
-/* not a heading in the reference, so no font-weight override — bold comes
-   from the text-stroke trick above, same graceful-degrade-to-thin-caps in
-   browsers that don't support it (Firefox) as the site being cloned */
-.author-line {
-  display: inline-block;
-  font-size: 1.05em;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  -webkit-text-stroke: .5px currentColor;
-  color: var(--muted);
-  border-top: 2px solid var(--muted);
-  border-bottom: 2px solid var(--muted-light);
-  padding: .5em .3em;
-  margin: 1.4em 0 0;
-}
-
 /* the intro/bio text, and every post's body — the site's one shared "reading" layout */
 .article {
   max-width: var(--measure);
