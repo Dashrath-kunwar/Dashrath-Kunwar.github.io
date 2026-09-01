@@ -1,7 +1,11 @@
-/* one stylesheet, one theme, no build step. if it gets bigger than this, something's wrong. */
+/* exact clone of fromjason.xyz's design (colors, type scale, spacing, link
+   behavior) with Dashrath's own content. only real substitution is the
+   typeface: Volume Tc is a paid PangramPangram font, can't be embedded here
+   legally, so Fraunces stands in for both body and headings — matching the
+   reference site's own choice to use ONE serif for both roles, rather than
+   the split body/heading pairing this site used before. */
 
-/* only Source Serif 4 and Fraunces come from Google — Roboto Mono and UnifrakturCook are self-hosted below */
-@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400..700;1,400..700&family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&display=swap');
 
 @font-face {
   font-family: 'Roboto Mono';
@@ -25,35 +29,23 @@
     U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
-@font-face {
-  font-family: 'UnifrakturCook';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('fonts/unifraktur-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-    U+02DC, U+2000-206F, U+2122, U+2212, U+FEFF, U+FFFD;
-}
-
 :root {
-  /* every color on the site lives here. change a mood, change five lines, not fifty. */
-  --bg: #121210;          /* warm near-black, softer than pure black */
-  --fg: #cdc0a3;          /* soft warm oat: body text — dimmer and less blue than parchment white, gentle on long reads */
-  --head: #ff4a3d;        /* headings, active/hover states, the halftone's red */
-  --accent-dim: color-mix(in srgb, var(--head) 70%, var(--fg) 30%); /* muted red: prose links, blockquotes, the wordmark's duotone shadow */
-  --dim: #8a8270;         /* dates, meta, quiet text */
-  --rule: #6b6555;        /* raw material for borders — always used through --hairline below, never bare */
-  --panel: #19180f;
-  --hairline: color-mix(in srgb, var(--rule) 18%, transparent); /* the faint divider used everywhere; tune once here */
+  /* exact palette from fromjason.xyz's own CSS custom properties */
+  --bg: #faf9f5;            /* ivory white */
+  --fg: #2c251d;             /* dark brown: body text AND headings share this — red is an accent, not a heading color */
+  --accent: #901714;         /* red ink: blockquote border, header-anchor, link-accent */
+  --accent-muted: #733331;   /* faded red ink: overline date */
+  --muted: #736b63;          /* sand: link hover/visited, quiet text */
+  --muted-light: #968d85;    /* light sand */
+  --panel: #f3f1e8;          /* chiffan: rare panel background */
+  --hairline: color-mix(in srgb, var(--fg) 14%, transparent);
 
-  --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif; /* reading: prose body text */
-  --heading: 'Fraunces', Georgia, 'Times New Roman', serif;     /* section-title, post-title, h2/h3 */
-  --mono: 'Roboto Mono', ui-monospace, Consolas, monospace; /* chrome: nav, tags, meta */
-  --display: 'UnifrakturCook', 'Times New Roman', serif;    /* the homepage wordmark. nowhere else. */
+  --serif: 'Fraunces', Georgia, 'Times New Roman', serif; /* body and headings both, matching the reference's single primary font */
+  --mono: 'Roboto Mono', ui-monospace, Consolas, monospace; /* nav, overline/meta, blockquotes — stands in for the reference's sans companion */
 
-  --measure: 62ch;
+  --measure: 650px;
 
-  color-scheme: dark; /* only theme that exists. don't add a light one back. */
+  color-scheme: light;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -64,41 +56,27 @@ html {
   background: var(--bg);
 }
 
+/* mobile-first: base size is the reference site's own smallest (mobile) step,
+   scaling up to its 19px desktop size through the same breakpoints they use,
+   just built ascending (min-width) instead of their descending (max-width) */
 body {
   margin: 0;
   min-height: 100vh;
   background: var(--bg);
   color: var(--fg);
   font-family: var(--serif);
-  font-size: 16px;
-  line-height: 1.7;
-  position: relative;
+  font-size: 1rem; /* 16px */
+  line-height: 1.6;
 }
+@media (min-width: 480px) { body { font-size: 1.0625rem; } } /* 17px */
+@media (min-width: 768px) { body { font-size: 1.125rem; } }  /* 18px */
+@media (min-width: 992px) { body { font-size: 1.1875rem; } } /* 19px, reference's desktop size */
 
-/* CRT scanlines. kept faint on purpose — texture, not a vision test */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 999;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(255,255,255,.025) 0px,
-    rgba(255,255,255,.025) 1px,
-    transparent 1px,
-    transparent 3px
-  );
-  mix-blend-mode: overlay;
-}
+::selection { background: var(--accent); color: var(--bg); }
 
-a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on purpose below. */
+.skip-link { position: absolute; left: -9999px; }
 
-::selection { background: var(--head); color: var(--bg); }
-
-.skip-link { position: absolute; left: -9999px; } /* screen readers only. sighted mouse users will never see it and that's fine. */
-
-/* nav bar, same on every page. mobile-first: wraps to two rows if it has to, never scrolls sideways. */
+/* nav bar, same on every page. no templating engine for a handful of pages. */
 .topbar {
   position: sticky;
   top: 0;
@@ -108,9 +86,9 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
   align-items: center;
   justify-content: center;
   row-gap: .5rem;
-  column-gap: 1rem;
+  column-gap: 1.25rem;
   padding: .85rem 1rem;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
   backdrop-filter: blur(6px);
   border-bottom: 1px solid var(--hairline);
   font-family: var(--mono);
@@ -122,24 +100,18 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
   text-transform: lowercase;
   text-decoration: none;
   color: var(--fg);
-  opacity: .85;
 }
-.topbar .mark:hover { color: var(--head); opacity: 1; }
+.topbar .mark:hover { color: var(--accent); }
 
 .topbar nav { display: flex; gap: 1.25rem; }
 .topbar nav a {
-  text-decoration: underline dotted;
+  text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: color-mix(in srgb, var(--fg) 45%, transparent);
   color: var(--fg);
-  padding: .25rem 0;
   transition: color .15s ease;
 }
-.topbar nav a:hover, .topbar nav a:focus-visible {
-  color: var(--accent-dim);
-  text-decoration-color: var(--accent-dim);
-}
-.topbar nav a[aria-current='page'] { color: var(--head); text-decoration-color: var(--head); } /* full red, kept distinct from the muted hover above so "you're here" never looks like a hover flicker */
+.topbar nav a:hover, .topbar nav a:focus-visible { color: var(--muted); }
+.topbar nav a[aria-current='page'] { color: var(--accent); }
 
 @media (min-width: 560px) {
   .topbar {
@@ -149,387 +121,161 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
   }
 }
 
-.section-title {
-  font-family: var(--heading);
-  font-weight: 700;
-  font-style: italic;
-  line-height: 1.1;
-  color: var(--head);
-  text-align: center;
-  margin: 0;
-}
-
-/* ================= HOME ================= */
-/* .hero is the empty-state layout (404 uses it). the real homepage below uses .masthead instead. */
-.hero {
-  min-height: calc(100dvh - 60px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 2rem 1rem 3rem;
-}
-.hero p { max-width: 32rem; }
-
-.frame {
-  padding: 10px;
-  background: var(--panel);
-  border: 1px solid color-mix(in srgb, var(--rule) 35%, transparent);
-  max-width: min(90vw, 640px);
-}
-.frame img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/* the homepage masthead: the halftone image now sits beside the name instead of filling the screen */
-.masthead {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 1.5rem;
-  padding: 3rem 1rem 2rem;
-}
-.masthead-frame { max-width: min(70vw, 220px); }
-.masthead-text { max-width: var(--measure); }
-
-@media (min-width: 640px) {
-  .masthead {
-    flex-direction: row;
-    align-items: flex-start;
-    text-align: left;
-    gap: 2rem;
-    max-width: var(--measure);
-    margin: 0 auto;
-    padding: 4rem clamp(1rem, 4vw, 2.5rem) 3rem;
-  }
-  .masthead-frame { max-width: 200px; flex: none; }
-}
-
-/* the name, in the blackletter font, once, on the homepage. that's the entire budget for this typeface. */
-.wordmark {
-  font-family: var(--display);
-  font-weight: 700;
-  color: var(--head);
-  margin: 0;
-  line-height: 1.05;
-  font-size: clamp(2rem, 7vw, 3.2rem);
-  text-shadow:
-    2px 0 color-mix(in srgb, var(--head) 70%, transparent),
-    -1px 0 color-mix(in srgb, var(--accent-dim) 70%, transparent);
-}
-
-.tagline {
-  font-family: var(--mono);
-  font-size: .9rem;
-  color: var(--dim);
-  margin: .75rem 0 0;
-}
-
-.bio { margin: 1rem 0 0; }
-
-/* recent-writing / future homepage sections: a quiet mono label, not a full heading — distinct from .section-title's weight */
-.home-section {
-  max-width: var(--measure);
-  margin: 0 auto;
-  padding: 0 clamp(1rem, 4vw, 2.5rem) 4rem;
-}
-.home-section-header {
-  font-family: var(--mono);
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: .25em;
-  font-size: .78rem;
-  color: var(--dim);
-  text-align: center;
-  margin: 0 0 1.5rem;
-}
-.see-all-link {
-  display: block;
-  text-align: center;
-  margin-top: 1.5rem;
-  font-family: var(--mono);
-  font-size: .85rem;
-  text-decoration: underline dotted;
-  text-underline-offset: 3px;
-}
-.see-all-link:hover { color: var(--head); }
-
-/* a duotone misregistration, like a halftone print slipping half a millimeter off-plate */
-@keyframes glitch {
-  0%, 100% {
-    text-shadow:
-      2px 0 color-mix(in srgb, var(--head) 70%, transparent),
-      -1px 0 color-mix(in srgb, var(--accent-dim) 70%, transparent);
-  }
-  20% {
-    text-shadow:
-      -4px 1px color-mix(in srgb, var(--head) 85%, transparent),
-      4px -1px color-mix(in srgb, var(--accent-dim) 80%, transparent);
-  }
-  40% {
-    text-shadow:
-      3px -2px color-mix(in srgb, var(--head) 80%, transparent),
-      -3px 2px color-mix(in srgb, var(--accent-dim) 75%, transparent);
-  }
-  60% {
-    text-shadow:
-      -2px 0 color-mix(in srgb, var(--head) 75%, transparent),
-      2px 0 color-mix(in srgb, var(--accent-dim) 70%, transparent);
-  }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .wordmark:hover { animation: glitch .35s steps(2, end) 1; }
-}
-
-/* ================= shared reading page (post) ================= */
+/* ================= shared page container ================= */
 .page {
   max-width: var(--measure);
   margin: 0 auto;
-  padding: clamp(2rem, 8vw, 4rem) clamp(1rem, 4vw, 2.5rem) clamp(3rem, 10vw, 6rem);
+  padding: clamp(2rem, 8vw, 3.5rem) clamp(1rem, 4vw, 2.5rem) clamp(2.5rem, 8vw, 4rem);
 }
 
-.page .section-title { font-size: clamp(2rem, 9vw, 3.2rem); margin-bottom: 2rem; }
-
-.page-lede {
-  text-align: center;
-  color: var(--dim);
-  max-width: 36rem;
-  margin: -1rem auto 3rem;
-}
-
-/* ================= BOOKMARKS ================= */
-.bookmark-group { margin: 0 0 3rem; }
-.bookmark-group:last-child { margin-bottom: 0; }
-.bookmark-group .home-section-header { text-align: left; }
-
-.bookmark-list { list-style: none; margin: 0; padding: 0; }
-.bookmark-item {
-  padding: .9rem 0;
-  border-bottom: 1px solid var(--hairline);
-}
-.bookmark-item:first-child { border-top: 1px solid var(--hairline); }
-
-.bookmark-title {
+.section-title {
   font-weight: 700;
+  font-size: 1.9rem;
+  line-height: 1.3;
+  color: var(--fg);
+  margin: 0 0 1.5rem;
+}
+
+/* ================= HOME ================= */
+.masthead {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 2.5rem clamp(1rem, 4vw, 2.5rem) 0;
+}
+
+.masthead-name {
+  font-weight: 700;
+  font-size: 2.2rem;
+  text-transform: lowercase;
+  letter-spacing: .01em;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.tagline {
+  font-size: 1.1rem;
+  font-style: italic;
+  margin: .5rem 0 0;
+}
+
+.author-line {
+  font-family: var(--mono);
+  font-size: .8rem;
+  color: var(--muted);
+  margin: .75rem 0 0;
+}
+
+/* the intro/bio text, and every post's body — the site's one shared "reading" layout */
+.article {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: clamp(1.5rem, 6vw, 2.5rem) clamp(1rem, 4vw, 2.5rem) clamp(2.5rem, 8vw, 4rem);
+}
+.article p { margin: .75em 0 0; }
+.article p:first-child { margin-top: 0; }
+
+.article p:first-of-type::first-letter {
+  font-weight: 700;
+  font-size: 3.2em;
+  float: left;
+  line-height: .8;
+  margin: .05em .12em 0 0;
+}
+
+.article h2 {
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.3;
+  margin: 1.8em 0 0;
+}
+.article h3 {
+  font-weight: 700;
+  font-size: 1.3rem;
+  line-height: 1.3;
+  margin: 1.8em 0 0;
+}
+
+/* bookmarks: just a header and the links under it, no padding-out */
+.bookmarks h2 { margin: 1.2em 0 0; }
+.bookmarks h2:first-child { margin-top: 0; }
+.bookmarks p { margin: .3em 0 0; }
+
+.header-anchor {
+  color: var(--accent);
+  font-size: .8em;
   text-decoration: none;
-  color: var(--accent-dim);
-}
-.bookmark-title:hover, .bookmark-title:focus-visible {
-  color: var(--head);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  margin-left: .3em;
 }
 
-.bookmark-note { margin: .3rem 0 0; color: var(--dim); font-size: .92rem; }
+.article a { color: var(--fg); text-decoration: underline; text-underline-offset: 2px; }
+.article a:hover, .article a:focus-visible, .article a:visited { color: var(--muted); }
 
-/* ================= WRITING (index) ================= */
+.article blockquote {
+  margin: 1.5em 0;
+  padding: .5em .5em .5em 1.05em;
+  border-left: 5px solid var(--accent);
+  font-family: var(--mono);
+  font-size: .95rem;
+}
+.article blockquote p { margin: .5em 0 0; }
+.article blockquote p:first-child { margin-top: 0; }
+
+.article ul, .article ol { margin: 1em 0 0; padding-left: 1.6em; }
+.article li { margin-bottom: .5em; }
+
+/* ================= WRITINGS ================= */
 .entry-list { list-style: none; margin: 0; padding: 0; }
 .entry {
-  padding: 1.6rem 0;
+  padding: 1.4rem 0;
   border-bottom: 1px solid var(--hairline);
 }
 .entry:first-child { border-top: 1px solid var(--hairline); }
 
-.entry-meta {
-  display: flex;
-  gap: .75rem;
-  align-items: baseline;
+.entry-date {
+  display: block;
   font-family: var(--mono);
   font-size: .78rem;
-  margin-bottom: .4rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--accent-muted);
+  margin-bottom: .3rem;
 }
-.entry-date { color: var(--dim); }
-.entry-time { color: var(--dim); }
 
-.entry h3 {
-  margin: 0 0 .4rem;
-  font-size: 1.25rem;
+.entry h2 {
+  margin: 0;
+  font-size: 1.2rem;
   font-weight: 700;
+  line-height: 1.4;
 }
-.entry h3 a {
-  text-decoration: none;
-  border-bottom: 1px solid color-mix(in srgb, var(--fg) 30%, transparent);
-  transition: color .15s ease, border-color .15s ease;
-}
-.entry h3 a:hover, .entry h3 a:focus-visible {
-  color: var(--head);
-  border-color: var(--head);
-}
+.entry h2 a { color: var(--fg); text-decoration: none; }
+.entry h2 a:hover, .entry h2 a:focus-visible { color: var(--muted); }
 
-.entry .excerpt { margin: 0; color: var(--dim); font-size: .92rem; }
+.entry .excerpt { margin: .35rem 0 0; color: var(--muted); font-size: .95rem; }
 
 /* ================= POST ================= */
-.progress-bar {
-  position: fixed;
-  top: 0; left: 0;
-  height: 2px;
-  width: 0%;
-  background: var(--head);
-  z-index: 100;
-  transition: width .08s linear;
-}
-
-.post-meta {
+.post-overline {
   font-family: var(--mono);
-  font-size: .8rem;
-  color: var(--dim);
-  margin-bottom: .75rem;
+  font-size: .78rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--accent-muted);
+  margin-bottom: .5rem;
 }
 
 .post-title {
-  font-family: var(--heading);
   font-weight: 700;
-  font-size: clamp(1.7rem, 6vw, 2.4rem);
-  color: var(--fg);
-  text-align: center;
-  margin: 0 0 2.5rem;
-  line-height: 1.4;
+  font-size: 1.9rem;
+  line-height: 1.3;
+  margin: 0 0 .5rem;
 }
 
-/* the actual writing. font-size and line-height are set once here and everything inside inherits them. */
-.post-body { font-size: 1.125rem; line-height: 1.8; }
-.post-body p { margin: 0 0 1.4rem; }
-.post-body p:last-child { margin-bottom: 0; } /* also catches the last <p> in a blockquote — one rule, not two */
-.post-body .drop::first-letter {
-  font-family: var(--display);
-  font-size: 3.6rem;
-  color: var(--head);
-  float: left;
-  line-height: .8;
-  margin: .1rem .35rem 0 0;
-}
-
-/* headings inside an article, not to be confused with the site's own nav/tag headings above */
-.post-body h2 {
-  font-family: var(--heading);
-  font-weight: 700;
-  font-size: clamp(1.35rem, 4.5vw, 1.7rem);
-  color: var(--head);
-  line-height: 1.4;
-  text-align: center;
-  margin: 3rem 0 1.1rem;
-}
-.post-body h3 {
-  font-family: var(--heading);
-  font-weight: 700;
-  font-size: clamp(1.1rem, 3.5vw, 1.3rem);
-  color: var(--head);
-  line-height: 1.4;
-  text-align: center;
-  margin: 2.2rem 0 .9rem;
-}
-
-/* deep link into a section, invisible until you're looking right at it */
-.post-body .header-anchor {
-  opacity: 0;
-  margin-left: .4rem;
-  color: var(--dim);
-  text-decoration: none;
-  transition: opacity .15s ease;
-}
-.post-body h2:hover .header-anchor,
-.post-body h3:hover .header-anchor,
-.post-body .header-anchor:focus-visible { opacity: 1; }
-.post-body .header-anchor:hover { color: var(--head); }
-
-/* no strong/em rules here on purpose — bold and italic are what browsers already do for free */
-.post-body a {
-  color: var(--accent-dim);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-.post-body a:hover, .post-body a:focus-visible {
-  color: var(--head);
-  text-decoration-thickness: 2px; /* same hue as the default state, so the color shift alone is a weak cue — a heavier underline makes hover unmistakable */
-}
-
-/* pull-quote: one big line, no attribution. use it once or twice a piece or it stops meaning anything */
-.pull-quote {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(1.15rem, 3.5vw, 1.35rem);
-  line-height: 1.5;
-  color: var(--fg);
-  text-align: center;
-  max-width: 30rem;
-  margin: 2.5rem auto;
-}
-
-/* blockquote is for quoting someone else. pull-quote is for quoting yourself. don't mix them up */
-.post-body blockquote {
-  margin: 2rem 0;
-  padding-left: 1.2rem;
-  border-left: 2px solid var(--accent-dim);
-  font-style: italic;
-  color: var(--accent-dim);
-}
-.post-body blockquote cite {
-  display: block;
-  margin-top: .5rem;
-  font-family: var(--mono);
-  font-style: normal;
-  font-size: .78rem;
-  color: var(--dim);
-}
-
-/* section break: a scene change that doesn't deserve its own heading */
-.section-break {
-  text-align: center;
-  color: var(--dim);
-  letter-spacing: .4em;
-  margin: 3rem 0;
-  font-size: .9rem;
-  user-select: none;
-}
-
-.post-body ul, .post-body ol {
-  margin: 0 0 1.4rem;
-  padding-left: 1.4rem;
-}
-.post-body li { margin-bottom: .5rem; }
-.post-body li::marker { color: var(--head); }
-
-/* dashed box for a note to yourself, not for the reader. delete it before you publish */
-.post-body .aside {
-  font-family: var(--mono);
-  font-size: .82rem;
-  color: var(--accent-dim);
-  border: 1px dashed color-mix(in srgb, var(--rule) 40%, transparent);
-  padding: 1rem 1.2rem;
-  margin: 2rem 0;
-}
-
-.post-footer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: .5rem 1.5rem;
-  margin-top: 3rem;
-  padding-top: 1.5rem;
-  border-top: 1px dashed color-mix(in srgb, var(--rule) 30%, transparent);
+.back-link {
+  display: inline-block;
+  margin-top: 2.5rem;
   font-family: var(--mono);
   font-size: .85rem;
-}
-
-.back-link { text-decoration: underline dotted; text-underline-offset: 3px; }
-.back-link:hover { color: var(--head); }
-
-/* styled to match .back-link even though it's a <button>, not an <a> */
-.copy-link {
-  background: none;
-  border: none;
-  padding: 0;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-  text-decoration: underline dotted;
+  text-decoration: underline;
   text-underline-offset: 3px;
+  color: var(--fg);
 }
-.copy-link:hover, .copy-link:focus-visible { color: var(--head); }
-.copy-link.copied { color: var(--head); text-decoration: none; }
-
+.back-link:hover { color: var(--muted); }
