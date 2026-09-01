@@ -28,13 +28,7 @@ BOOKMARKS_HTML = REPO_ROOT / "bookmarks.html"
 POSTS_DIR = REPO_ROOT / "writing"
 TEMPLATE = REPO_ROOT / "tools" / "templates" / "post.html"
 
-MD_EXTENSIONS = ["extra", "smarty", "sane_lists", "toc"]
-MD_EXTENSION_CONFIGS = {
-    # toc: only used for its side effect (heading ids + a "#" permalink
-    # matching .header-anchor). never write [TOC] in a note, so the
-    # extension's own toc block never renders.
-    "toc": {"permalink": "#", "permalink_class": "header-anchor", "permalink_title": "link to this section"},
-}
+MD_EXTENSIONS = ["extra", "smarty", "sane_lists"]
 
 ENTRIES_BEGIN = "<!-- BEGIN ENTRIES -->"
 ENTRIES_END = "<!-- END ENTRIES -->"
@@ -54,11 +48,6 @@ class BuildError(Exception):
 def display_date(iso):
     d = datetime.strptime(iso, "%Y-%m-%d")
     return f"{d.day} {MONTHS[d.month - 1]} {d.year}"
-
-
-def slugify(text):
-    s = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
-    return s or "section"
 
 
 # --- Writing/*.md ------------------------------------------------------
@@ -116,7 +105,7 @@ def render_body(path, raw_body):
     # no pull-quote/citation/section-break handling: the current design
     # doesn't have those elements. drop cap is pure CSS
     # (.article > p:first-of-type::first-letter), nothing to do here for it.
-    return markdown.markdown(raw_body, extensions=MD_EXTENSIONS, extension_configs=MD_EXTENSION_CONFIGS)
+    return markdown.markdown(raw_body, extensions=MD_EXTENSIONS)
 
 
 def render_post_page(fields, body_html):
@@ -176,8 +165,7 @@ def parse_bookmarks(text):
 def render_bookmarks_region(categories):
     lines = []
     for cat in categories:
-        slug = slugify(cat["name"])
-        lines.append(f'    <h2 id="{slug}">{html.escape(cat["name"])} <a class="header-anchor" href="#{slug}">#</a></h2>')
+        lines.append(f'    <h2>{html.escape(cat["name"])}</h2>')
         for text, url in cat["items"]:
             lines.append(f'    <p><a href="{html.escape(url)}">{html.escape(text)}</a></p>')
     return "\n".join(lines)

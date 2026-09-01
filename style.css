@@ -13,7 +13,7 @@
   /* exact palette from fromjason.xyz's own CSS custom properties */
   --bg: #faf9f5;            /* ivory white */
   --fg: #2c251d;             /* dark brown: body text AND headings share this — red is an accent, not a heading color */
-  --accent: #901714;         /* red ink: blockquote border, header-anchor, link-accent */
+  --accent: #901714;         /* red ink: blockquote border, link-accent */
   --accent-muted: #733331;   /* faded red ink: overline date */
   --muted: #736b63;          /* sand: link hover/visited, quiet text */
   --muted-light: #968d85;    /* light sand */
@@ -223,13 +223,6 @@ body {
 .bookmarks h2 { margin: 1.2em 0 0; }
 .bookmarks h2:first-child { margin-top: 0; }
 .bookmarks p { margin: .3em 0 0; }
-
-.header-anchor {
-  color: var(--accent);
-  font-size: .8em;
-  text-decoration: none;
-  margin-left: .3em;
-}
 
 .article a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
 .article a:hover, .article a:focus-visible { color: var(--accent-muted); }
