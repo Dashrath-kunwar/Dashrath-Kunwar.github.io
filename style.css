@@ -107,6 +107,10 @@ body {
   margin: 0 auto;
   padding: clamp(1rem, 4vw, 1.75rem) clamp(1rem, 4vw, 2.5rem) clamp(2.5rem, 8vw, 4rem);
 }
+/* on post pages .page is just the header block, immediately followed by
+   .article's own top padding -- without this the two paddings stack into
+   a huge gap between the title and the first paragraph */
+.page:has(+ .article) { padding-bottom: 0; }
 
 .section-title {
   font-weight: 700;
