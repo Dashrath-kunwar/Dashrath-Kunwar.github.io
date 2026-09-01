@@ -116,14 +116,14 @@ body {
   margin: 0 0 1.5rem;
 }
 
-/* the default section-break ornament, used wherever the page needs a visual
-   pause: never full-width, always centered */
+/* the default divider, closing every page as a footer ornament */
 .divider {
   display: block;
   width: min(70%, 320px);
   height: auto;
-  margin: 2.5rem auto;
+  margin: 0 auto;
 }
+.site-footer { padding: 1.5rem clamp(1rem, 4vw, 2.5rem) 3rem; }
 
 /* ================= HOME ================= */
 /* the masthead's whole look (uppercase, letter-spaced, text-stroke) is a
@@ -236,6 +236,7 @@ body {
 .entry {
   padding: 1.4rem 0;
   border-bottom: 1px solid var(--hairline);
+  text-align: center;
 }
 .entry:first-child { border-top: 1px solid var(--hairline); }
 
