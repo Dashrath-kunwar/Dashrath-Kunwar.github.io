@@ -195,8 +195,10 @@ body {
 
 /* > not a descendant selector on purpose: :first-of-type is scoped per
    parent, so without the child combinator this also matched the first <p>
-   inside every <blockquote> -- a second drop cap showing up mid-quote */
-.article > p:first-of-type::first-letter {
+   inside every <blockquote> -- a second drop cap showing up mid-quote.
+   :not(.bookmarks) because bookmarks.html reuses .article too, and a drop
+   cap on the first bookmark link isn't a reading page, it's a list item */
+.article:not(.bookmarks) > p:first-of-type::first-letter {
   font-weight: 700;
   font-size: 3.2em;
   float: left;
