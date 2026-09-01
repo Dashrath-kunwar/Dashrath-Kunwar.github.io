@@ -228,7 +228,7 @@ body {
 .bookmarks h2 { margin: 1.2em 0 0; }
 .bookmarks h2:first-child { margin-top: 0; }
 .bookmarks p { margin: .3em 0 0; }
-.bookmark-note { color: var(--muted); }
+.bookmark-note { color: var(--fg); }
 
 .article a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
 .article a:hover, .article a:focus-visible { color: var(--accent-muted); }
