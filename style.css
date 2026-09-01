@@ -7,7 +7,7 @@
    nav/meta/blockquote chrome — that role needs a plain sans, not a
    monospace, which is what was there before this fix. */
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:ital,wght@0,400..700;1,400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:ital,wght@0,400..800;1,400..800&display=swap');
 
 :root {
   /* exact palette from fromjason.xyz's own CSS custom properties */
@@ -239,6 +239,7 @@ body {
 .entry-date {
   display: block;
   font-family: var(--sans);
+  font-weight: 800;
   font-size: .78rem;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -260,7 +261,7 @@ body {
 /* ================= POST ================= */
 .post-overline {
   font-family: var(--sans);
-  font-weight: 700;
+  font-weight: 800;
   font-size: .78rem;
   letter-spacing: .12em;
   text-transform: uppercase;
