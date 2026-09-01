@@ -233,10 +233,8 @@ body {
 .entry-list { list-style: none; margin: 0; padding: 0; }
 .entry {
   padding: 1.4rem 0;
-  border-bottom: 1px solid var(--hairline);
   text-align: center;
 }
-.entry:first-child { border-top: 1px solid var(--hairline); }
 
 .entry-date {
   display: block;
