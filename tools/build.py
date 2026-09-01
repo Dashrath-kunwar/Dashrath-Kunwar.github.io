@@ -136,15 +136,20 @@ def render_entry(fields):
 # --- bookmarks.md --------------------------------------------------------
 
 BOOKMARK_HEADER_RE = re.compile(r"^##\s+(.+)$")
-BOOKMARK_LINK_RE = re.compile(r"^\[(.+?)\]\((.+?)\)$")
+# [Text](url) or [Text](url) - a description, description optional either way
+BOOKMARK_LINK_RE = re.compile(r"^\[(.+?)\]\((.+?)\)(?:\s*-\s*(.+))?$")
+# **Text** or **Text** - a description, for an entry with no link at all
+BOOKMARK_TITLE_RE = re.compile(r"^\*\*(.+?)\*\*(?:\s*-\s*(.+))?$")
 
 
 def parse_bookmarks(text):
-    """One category per `## Heading`, one bookmark per `[text](url)` line
-    underneath -- no blank line required between entries, unlike normal
-    markdown paragraphs, so this is a running list you can just add a line
-    to. Anything that doesn't match either pattern (blank lines, stray
-    notes) is silently skipped, not an error -- this file has no gate."""
+    """One category per `## Heading`. Under it, one bookmark per line, either
+    `[Text](url)` (a real link) or `**Text**` (just a name, no link) --
+    either form can carry an optional ` - description` tail. No blank line
+    required between entries, unlike normal markdown paragraphs, so this
+    stays a running list you can just add a line to. Anything that matches
+    neither pattern (blank lines, stray notes) is silently skipped, not an
+    error -- this file has no gate."""
     categories = []
     current = None
     for raw_line in text.splitlines():
@@ -156,9 +161,17 @@ def parse_bookmarks(text):
             current = {"name": m.group(1).strip(), "items": []}
             categories.append(current)
             continue
+        if current is None:
+            continue
         m = BOOKMARK_LINK_RE.match(line)
-        if m and current is not None:
-            current["items"].append((m.group(1).strip(), m.group(2).strip()))
+        if m:
+            text_, url, note = m.group(1).strip(), m.group(2).strip(), m.group(3)
+            current["items"].append({"text": text_, "url": url, "note": note.strip() if note else None})
+            continue
+        m = BOOKMARK_TITLE_RE.match(line)
+        if m:
+            text_, note = m.group(1).strip(), m.group(2)
+            current["items"].append({"text": text_, "url": None, "note": note.strip() if note else None})
     return categories
 
 
@@ -166,8 +179,13 @@ def render_bookmarks_region(categories):
     lines = []
     for cat in categories:
         lines.append(f'    <h2>{html.escape(cat["name"])}</h2>')
-        for text, url in cat["items"]:
-            lines.append(f'    <p><a href="{html.escape(url)}">{html.escape(text)}</a></p>')
+        for item in cat["items"]:
+            if item["url"]:
+                title_html = f'<a href="{html.escape(item["url"])}">{html.escape(item["text"])}</a>'
+            else:
+                title_html = f'<strong>{html.escape(item["text"])}</strong>'
+            note_html = f' <span class="bookmark-note">- {html.escape(item["note"])}</span>' if item["note"] else ""
+            lines.append(f"    <p>{title_html}{note_html}</p>")
     return "\n".join(lines)
 
 
