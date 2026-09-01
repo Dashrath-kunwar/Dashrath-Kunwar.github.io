@@ -77,11 +77,18 @@ body {
 }
 
 .topbar .mark {
-  text-transform: lowercase;
+  display: flex;
   text-decoration: none;
   color: var(--fg);
+  opacity: .9;
+  transition: opacity .15s ease;
 }
-.topbar .mark:hover { color: var(--accent); }
+.topbar .mark:hover { opacity: 1; }
+.topbar .mark img {
+  display: block;
+  height: 28px;
+  width: auto;
+}
 
 .topbar nav { display: flex; gap: 1.25rem; }
 .topbar nav a {
