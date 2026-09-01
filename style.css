@@ -39,8 +39,8 @@
   /* every color on the site lives here. change a mood, change five lines, not fifty. */
   --bg: #121210;          /* warm near-black, softer than pure black */
   --fg: #cdc0a3;          /* soft warm oat: body text — dimmer and less blue than parchment white, gentle on long reads */
-  --head: #ff4a3d;        /* headings, accents, the halftone's red */
-  --em: #5fd3c4;          /* teal: emphasis, hover, the glitch ghost */
+  --head: #ff4a3d;        /* headings, active/hover states, the halftone's red */
+  --accent-dim: color-mix(in srgb, var(--head) 70%, var(--fg) 30%); /* muted red: prose links, blockquotes, the wordmark's duotone shadow */
   --dim: #8a8270;         /* dates, meta, quiet text */
   --rule: #6b6555;        /* raw material for borders — always used through --hairline below, never bare */
   --panel: #19180f;
@@ -94,7 +94,7 @@ body::after {
 
 a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on purpose below. */
 
-::selection { background: var(--em); color: var(--bg); }
+::selection { background: var(--head); color: var(--bg); }
 
 .skip-link { position: absolute; left: -9999px; } /* screen readers only. sighted mouse users will never see it and that's fine. */
 
@@ -124,7 +124,7 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
   color: var(--fg);
   opacity: .85;
 }
-.topbar .mark:hover { color: var(--em); opacity: 1; }
+.topbar .mark:hover { color: var(--head); opacity: 1; }
 
 .topbar nav { display: flex; gap: 1.25rem; }
 .topbar nav a {
@@ -136,10 +136,10 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
   transition: color .15s ease;
 }
 .topbar nav a:hover, .topbar nav a:focus-visible {
-  color: var(--em);
-  text-decoration-color: var(--em);
+  color: var(--accent-dim);
+  text-decoration-color: var(--accent-dim);
 }
-.topbar nav a[aria-current='page'] { color: var(--head); text-decoration-color: var(--head); }
+.topbar nav a[aria-current='page'] { color: var(--head); text-decoration-color: var(--head); } /* full red, kept distinct from the muted hover above so "you're here" never looks like a hover flicker */
 
 @media (min-width: 560px) {
   .topbar {
@@ -159,13 +159,8 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
   margin: 0;
 }
 
-.placeholder {
-  color: var(--em);
-  font-style: italic;
-  opacity: .85;
-}
-
 /* ================= HOME ================= */
+/* .hero is the empty-state layout (404 uses it). the real homepage below uses .masthead instead. */
 .hero {
   min-height: calc(100dvh - 60px);
   display: flex;
@@ -189,40 +184,101 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
   height: auto;
 }
 
+/* the homepage masthead: the halftone image now sits beside the name instead of filling the screen */
+.masthead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+  padding: 3rem 1rem 2rem;
+}
+.masthead-frame { max-width: min(70vw, 220px); }
+.masthead-text { max-width: var(--measure); }
+
+@media (min-width: 640px) {
+  .masthead {
+    flex-direction: row;
+    align-items: flex-start;
+    text-align: left;
+    gap: 2rem;
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding: 4rem clamp(1rem, 4vw, 2.5rem) 3rem;
+  }
+  .masthead-frame { max-width: 200px; flex: none; }
+}
+
 /* the name, in the blackletter font, once, on the homepage. that's the entire budget for this typeface. */
 .wordmark {
   font-family: var(--display);
   font-weight: 700;
   color: var(--head);
-  margin: 2rem 0 0;
+  margin: 0;
   line-height: 1.05;
-  font-size: clamp(2.4rem, 8vw, 4.6rem);
+  font-size: clamp(2rem, 7vw, 3.2rem);
   text-shadow:
-    2px 0 color-mix(in srgb, var(--em) 70%, transparent),
-    -1px 0 color-mix(in srgb, var(--head) 60%, transparent);
+    2px 0 color-mix(in srgb, var(--head) 70%, transparent),
+    -1px 0 color-mix(in srgb, var(--accent-dim) 70%, transparent);
 }
 
-/* the glitch ghost, cashed in: same red/teal split as above, briefly shaken apart on hover */
+.tagline {
+  font-family: var(--mono);
+  font-size: .9rem;
+  color: var(--dim);
+  margin: .75rem 0 0;
+}
+
+.bio { margin: 1rem 0 0; }
+
+/* recent-writing / future homepage sections: a quiet mono label, not a full heading — distinct from .section-title's weight */
+.home-section {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 2.5rem) 4rem;
+}
+.home-section-header {
+  font-family: var(--mono);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: .25em;
+  font-size: .78rem;
+  color: var(--dim);
+  text-align: center;
+  margin: 0 0 1.5rem;
+}
+.see-all-link {
+  display: block;
+  text-align: center;
+  margin-top: 1.5rem;
+  font-family: var(--mono);
+  font-size: .85rem;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+.see-all-link:hover { color: var(--head); }
+
+/* a duotone misregistration, like a halftone print slipping half a millimeter off-plate */
 @keyframes glitch {
   0%, 100% {
     text-shadow:
-      2px 0 color-mix(in srgb, var(--em) 70%, transparent),
-      -1px 0 color-mix(in srgb, var(--head) 60%, transparent);
+      2px 0 color-mix(in srgb, var(--head) 70%, transparent),
+      -1px 0 color-mix(in srgb, var(--accent-dim) 70%, transparent);
   }
   20% {
     text-shadow:
-      -4px 1px color-mix(in srgb, var(--em) 85%, transparent),
-      4px -1px color-mix(in srgb, var(--head) 75%, transparent);
+      -4px 1px color-mix(in srgb, var(--head) 85%, transparent),
+      4px -1px color-mix(in srgb, var(--accent-dim) 80%, transparent);
   }
   40% {
     text-shadow:
-      3px -2px color-mix(in srgb, var(--em) 80%, transparent),
-      -3px 2px color-mix(in srgb, var(--head) 70%, transparent);
+      3px -2px color-mix(in srgb, var(--head) 80%, transparent),
+      -3px 2px color-mix(in srgb, var(--accent-dim) 75%, transparent);
   }
   60% {
     text-shadow:
-      -2px 0 color-mix(in srgb, var(--em) 75%, transparent),
-      2px 0 color-mix(in srgb, var(--head) 65%, transparent);
+      -2px 0 color-mix(in srgb, var(--head) 75%, transparent),
+      2px 0 color-mix(in srgb, var(--accent-dim) 70%, transparent);
   }
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -237,6 +293,38 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
 }
 
 .page .section-title { font-size: clamp(2rem, 9vw, 3.2rem); margin-bottom: 2rem; }
+
+.page-lede {
+  text-align: center;
+  color: var(--dim);
+  max-width: 36rem;
+  margin: -1rem auto 3rem;
+}
+
+/* ================= BOOKMARKS ================= */
+.bookmark-group { margin: 0 0 3rem; }
+.bookmark-group:last-child { margin-bottom: 0; }
+.bookmark-group .home-section-header { text-align: left; }
+
+.bookmark-list { list-style: none; margin: 0; padding: 0; }
+.bookmark-item {
+  padding: .9rem 0;
+  border-bottom: 1px solid var(--hairline);
+}
+.bookmark-item:first-child { border-top: 1px solid var(--hairline); }
+
+.bookmark-title {
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--accent-dim);
+}
+.bookmark-title:hover, .bookmark-title:focus-visible {
+  color: var(--head);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.bookmark-note { margin: .3rem 0 0; color: var(--dim); font-size: .92rem; }
 
 /* ================= WRITING (index) ================= */
 .entry-list { list-style: none; margin: 0; padding: 0; }
@@ -268,8 +356,8 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
   transition: color .15s ease, border-color .15s ease;
 }
 .entry h3 a:hover, .entry h3 a:focus-visible {
-  color: var(--em);
-  border-color: var(--em);
+  color: var(--head);
+  border-color: var(--head);
 }
 
 .entry .excerpt { margin: 0; color: var(--dim); font-size: .92rem; }
@@ -346,15 +434,18 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
 .post-body h2:hover .header-anchor,
 .post-body h3:hover .header-anchor,
 .post-body .header-anchor:focus-visible { opacity: 1; }
-.post-body .header-anchor:hover { color: var(--em); }
+.post-body .header-anchor:hover { color: var(--head); }
 
 /* no strong/em rules here on purpose — bold and italic are what browsers already do for free */
 .post-body a {
-  color: var(--em);
+  color: var(--accent-dim);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
-.post-body a:hover, .post-body a:focus-visible { color: var(--head); }
+.post-body a:hover, .post-body a:focus-visible {
+  color: var(--head);
+  text-decoration-thickness: 2px; /* same hue as the default state, so the color shift alone is a weak cue — a heavier underline makes hover unmistakable */
+}
 
 /* pull-quote: one big line, no attribution. use it once or twice a piece or it stops meaning anything */
 .pull-quote {
@@ -372,9 +463,9 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
 .post-body blockquote {
   margin: 2rem 0;
   padding-left: 1.2rem;
-  border-left: 2px solid var(--em);
+  border-left: 2px solid var(--accent-dim);
   font-style: italic;
-  color: var(--em);
+  color: var(--accent-dim);
 }
 .post-body blockquote cite {
   display: block;
@@ -406,7 +497,7 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
 .post-body .aside {
   font-family: var(--mono);
   font-size: .82rem;
-  color: var(--em);
+  color: var(--accent-dim);
   border: 1px dashed color-mix(in srgb, var(--rule) 40%, transparent);
   padding: 1rem 1.2rem;
   margin: 2rem 0;
@@ -426,7 +517,7 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
 }
 
 .back-link { text-decoration: underline dotted; text-underline-offset: 3px; }
-.back-link:hover { color: var(--em); }
+.back-link:hover { color: var(--head); }
 
 /* styled to match .back-link even though it's a <button>, not an <a> */
 .copy-link {
@@ -439,6 +530,6 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
   text-decoration: underline dotted;
   text-underline-offset: 3px;
 }
-.copy-link:hover, .copy-link:focus-visible { color: var(--em); }
+.copy-link:hover, .copy-link:focus-visible { color: var(--head); }
 .copy-link.copied { color: var(--head); text-decoration: none; }
 

@@ -22,18 +22,35 @@
   <a class="mark" href="index.html">home</a>
   <nav aria-label="Sections">
     <a href="writing.html">writing</a>
+    <a href="bookmarks.html">bookmarks</a>
   </nav>
 </header>
 
 <main id="main">
-  <!-- the only image on the whole site. keep it that way. -->
-  <section class="hero">
-    <div class="frame">
+  <!-- the only image on the whole site — smaller now, sitting beside the name instead of filling the screen -->
+  <section class="masthead">
+    <div class="frame masthead-frame">
       <img src="assets/red-halftone.png" width="1920" height="1080"
            alt="Red and black halftone portrait, a woman in profile with dark hair against a red field.">
     </div>
 
-    <h1 class="wordmark">Dashrath Kunwar</h1>
+    <div class="masthead-text">
+      <h1 class="wordmark">Dashrath Kunwar</h1>
+      <p class="tagline">[ placeholder — one short line under your name. your call on tone. ]</p>
+      <p class="bio">[ placeholder — a short paragraph about you: who you are, what this site is, why you're writing here. this is the one place on the site that talks directly to the reader, so write it yourself, in your own voice. delete this note when you replace it. ]</p>
+    </div>
+  </section>
+
+  <section class="home-section">
+    <h2 class="home-section-header">Recent Writing</h2>
+    <ul class="entry-list">
+      <!-- BEGIN RECENT -->
+      <!-- nothing published yet. once you've got real pieces live, either copy entries here by hand
+           to match writing.html, or ask for this to be wired into the same pipeline that already
+           maintains writing.html's list — that's a separate, separately-testable change from this one. -->
+      <!-- END RECENT -->
+    </ul>
+    <a class="see-all-link" href="writing.html">all writing &rarr;</a>
   </section>
 </main>
 </body>
