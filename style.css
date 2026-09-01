@@ -35,7 +35,7 @@ html {
      cascading from body's own rem-based size, so scaling the root here
      scales everything proportionally in one place instead of touching
      a dozen individual declarations */
-  font-size: 90%;
+  font-size: 82%;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   background: var(--bg);
