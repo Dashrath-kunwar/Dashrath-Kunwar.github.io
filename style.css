@@ -144,7 +144,7 @@ body {
 .masthead-name {
   font-weight: 700;
   font-size: 2.6em;
-  letter-spacing: .2em;
+  letter-spacing: .05em;
   text-transform: uppercase;
   color: var(--accent);
   -webkit-text-stroke: .7px currentColor;
@@ -164,7 +164,7 @@ body {
   color: inherit;
   cursor: pointer;
   font-size: 1.7em;
-  letter-spacing: .22em;
+  letter-spacing: .05em;
   text-transform: uppercase;
   -webkit-text-stroke: 1.2px currentColor;
   margin: .5em 0 0;
