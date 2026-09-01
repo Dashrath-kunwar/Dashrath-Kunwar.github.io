@@ -7,7 +7,7 @@
    nav/meta/blockquote chrome — that role needs a plain sans, not a
    monospace, which is what was there before this fix. */
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:ital,wght@0,400..800;1,400..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:ital,wght@0,400..800;1,400..800&family=Noto+Serif+Devanagari:wght@400..800&display=swap');
 
 :root {
   /* exact palette from fromjason.xyz's own CSS custom properties */
@@ -150,6 +150,18 @@ body {
   -webkit-text-stroke: 1.2px currentColor;
   margin: .5em 0 0;
   line-height: 1.1;
+}
+
+/* Fraunces has no Devanagari glyphs at all, and neither uppercase nor a
+   Latin-letterform stroke trick make sense on a script with no case and
+   dense conjuncts/matras -- Noto Serif Devanagari's own 800 weight does
+   the boldness work instead, matched against the Latin lines around it */
+.tagline:lang(hi) {
+  font-family: 'Noto Serif Devanagari', var(--serif);
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: none;
+  -webkit-text-stroke: 0;
 }
 
 /* not a heading in the reference, so no font-weight override — bold comes
