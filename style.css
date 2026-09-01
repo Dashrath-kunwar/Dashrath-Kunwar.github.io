@@ -1,7 +1,7 @@
 /* one stylesheet, one theme, no build step. if it gets bigger than this, something's wrong. */
 
-/* only Crimson Pro comes from Google — Roboto Mono and UnifrakturCook are self-hosted below */
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400..700;1,400..700&display=swap');
+/* only Source Serif 4 and Fraunces come from Google — Roboto Mono and UnifrakturCook are self-hosted below */
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400..700;1,400..700&family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,700&display=swap');
 
 @font-face {
   font-family: 'Roboto Mono';
@@ -46,7 +46,8 @@
   --panel: #19180f;
   --hairline: color-mix(in srgb, var(--rule) 18%, transparent); /* the faint divider used everywhere; tune once here */
 
-  --serif: 'Crimson Pro', Georgia, 'Times New Roman', serif; /* reading: prose, titles */
+  --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif; /* reading: prose body text */
+  --heading: 'Fraunces', Georgia, 'Times New Roman', serif;     /* section-title, post-title, h2/h3 */
   --mono: 'Roboto Mono', ui-monospace, Consolas, monospace; /* chrome: nav, tags, meta */
   --display: 'UnifrakturCook', 'Times New Roman', serif;    /* the homepage wordmark. nowhere else. */
 
@@ -149,7 +150,7 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
 }
 
 .section-title {
-  font-family: var(--serif);
+  font-family: var(--heading);
   font-weight: 700;
   font-style: italic;
   line-height: 1.1;
@@ -292,7 +293,7 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
 }
 
 .post-title {
-  font-family: var(--serif);
+  font-family: var(--heading);
   font-weight: 700;
   font-size: clamp(1.7rem, 6vw, 2.4rem);
   color: var(--fg);
@@ -316,7 +317,7 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
 
 /* headings inside an article, not to be confused with the site's own nav/tag headings above */
 .post-body h2 {
-  font-family: var(--serif);
+  font-family: var(--heading);
   font-weight: 700;
   font-size: clamp(1.35rem, 4.5vw, 1.7rem);
   color: var(--head);
@@ -325,7 +326,7 @@ a { color: inherit; } /* kill blue-link-syndrome. every link gets a color on pur
   margin: 3rem 0 1.1rem;
 }
 .post-body h3 {
-  font-family: var(--serif);
+  font-family: var(--heading);
   font-weight: 700;
   font-size: clamp(1.1rem, 3.5vw, 1.3rem);
   color: var(--head);
